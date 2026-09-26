@@ -1,680 +1,571 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SNOR-CRM - Enterprise Helpdesk & CRM</title>
+    <title>SNOR-CRM - Helpdesk & Operations Manager</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        primary: { 50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca' }
-                    }
-                }
-            }
-        }
-    </script>
 </head>
-<body class="h-full bg-slate-50 text-slate-800 font-sans antialiased overflow-hidden">
+<body class="bg-slate-900 text-slate-100 font-sans antialiased min-h-screen flex flex-col">
 
-    <!-- App Container -->
-    <div id="app" class="h-full flex flex-col"></div>
+    <!-- App Root Container -->
+    <div id="app" class="flex-1 flex flex-col">
+        
+        <!-- AUTH VIEW (Login / Register) -->
+        <div id="auth-view" class="flex-1 flex items-center justify-center p-4 bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950">
+            <div class="max-w-md w-full bg-slate-900/80 backdrop-blur border border-slate-800 p-8 rounded-2xl shadow-2xl">
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-indigo-600 text-white text-2xl font-bold mb-3 shadow-lg shadow-indigo-500/30">
+                        <i class="fa-solid fa-headset"></i>
+                    </div>
+                    <h1 class="text-2xl font-bold tracking-tight text-white">SNOR-CRM</h1>
+                    <p class="text-sm text-slate-400 mt-1">Enterprise Helpdesk & Operations Portal</p>
+                </div>
 
-    <!-- JavaScript Application Logic -->
+                <!-- Tabs: Login vs Register -->
+                <div class="flex rounded-xl bg-slate-800 p-1 mb-6">
+                    <button onclick="switchAuthTab('login')" id="tab-login" class="flex-1 py-2 text-sm font-medium rounded-lg bg-indigo-600 text-white transition">Sign In</button>
+                    <button onclick="switchAuthTab('register')" id="tab-register" class="flex-1 py-2 text-sm font-medium rounded-lg text-slate-400 hover:text-white transition">Register Agent</button>
+                </div>
+
+                <!-- Login Form -->
+                <form id="form-login" onsubmit="handleLogin(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Email or Phone</label>
+                        <input type="text" id="login-id" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500 text-white" placeholder="name@company.com or phone">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Password</label>
+                        <input type="password" id="login-pass" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500 text-white" placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-3 rounded-xl transition shadow-lg shadow-indigo-600/20">Sign In to Dashboard</button>
+                </form>
+
+                <!-- Register Form -->
+                <form id="form-register" onsubmit="handleRegister(event)" class="space-y-4 hidden">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Full Name</label>
+                        <input type="text" id="reg-name" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 text-white" placeholder="John Doe">
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Email</label>
+                            <input type="email" id="reg-email" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 text-white" placeholder="john@company.com">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Phone</label>
+                            <input type="tel" id="reg-phone" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 text-white" placeholder="9876543210">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Password (Min 8 chars, Upper, Lower, Num, Special)</label>
+                        <input type="password" id="reg-pass" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 text-white" placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-3 rounded-xl transition shadow-lg shadow-emerald-600/20">Submit Agent Registration</button>
+                </form>
+                
+                <div id="auth-error" class="mt-4 text-xs text-rose-400 text-center font-medium hidden"></div>
+            </div>
+        </div>
+
+        <!-- PENDING APPROVAL SCREEN -->
+        <div id="pending-view" class="flex-1 flex items-center justify-center p-4 bg-slate-950 hidden">
+            <div class="max-w-md w-full bg-slate-900 border border-slate-800 p-8 rounded-2xl text-center">
+                <div class="w-16 h-16 bg-amber-500/20 text-amber-400 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                    <i class="fa-solid fa-hourglass-half"></i>
+                </div>
+                <h2 class="text-xl font-bold text-white mb-2">Account Pending Approval</h2>
+                <p class="text-sm text-slate-400 mb-6">Your registration has been submitted successfully. A Super Admin must approve your account before you can access SNOR-CRM.</p>
+                <button onclick="logout()" class="text-sm text-indigo-400 hover:text-indigo-300 font-medium underline">Back to Login</button>
+            </div>
+        </div>
+
+        <!-- DASHBOARD VIEW (Main App) -->
+        <div id="dashboard-view" class="flex-1 flex flex-col hidden">
+            <!-- Top Navigation Bar -->
+            <header class="bg-slate-900 border-b border-slate-800 px-6 py-3 flex items-center justify-between sticky top-0 z-30">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-bold shadow">
+                        <i class="fa-solid fa-headset"></i>
+                    </div>
+                    <div>
+                        <span class="text-lg font-bold tracking-tight text-white">SNOR-CRM</span>
+                        <span class="text-xs px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-400 font-medium ml-2" id="nav-role-badge">Super Admin</span>
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <div class="text-right hidden sm:block">
+                        <div class="text-sm font-semibold text-white" id="nav-user-name">User</div>
+                        <div class="text-xs text-slate-400" id="nav-user-email">email@domain.com</div>
+                    </div>
+                    <button onclick="logout()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-2 rounded-xl text-sm transition flex items-center space-x-2">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>Logout</span>
+                    </button>
+                </div>
+            </header>
+
+            <div class="flex-1 flex flex-col md:flex-row">
+                <!-- Sidebar Navigation -->
+                <aside class="w-full md:w-64 bg-slate-950 border-r border-slate-800 p-4 flex flex-row md:flex-col justify-between space-x-2 md:space-x-0 md:space-y-1 overflow-x-auto">
+                    <div class="flex md:flex-col space-x-1 md:space-x-0 md:space-y-1 w-full">
+                        <button onclick="switchTab('overview')" id="sidebar-overview" class="sidebar-btn flex items-center space-x-3 w-full px-4 py-3 rounded-xl text-sm font-medium bg-indigo-600 text-white transition">
+                            <i class="fa-solid fa-chart-pie w-5"></i>
+                            <span class="hidden md:inline">Overview</span>
+                        </button>
+                        <button onclick="switchTab('tickets')" id="sidebar-tickets" class="sidebar-btn flex items-center space-x-3 w-full px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-900 hover:text-white transition">
+                            <i class="fa-solid fa-ticket w-5"></i>
+                            <span class="hidden md:inline">Tickets & SLA</span>
+                        </button>
+                        <button onclick="switchTab('calls')" id="sidebar-calls" class="sidebar-btn flex items-center space-x-3 w-full px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-900 hover:text-white transition">
+                            <i class="fa-solid fa-phone-volume w-5"></i>
+                            <span class="hidden md:inline">Call Logs & Points</span>
+                        </button>
+                        <button onclick="switchTab('leaderboard')" id="sidebar-leaderboard" class="sidebar-btn flex items-center space-x-3 w-full px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-900 hover:text-white transition">
+                            <i class="fa-solid fa-trophy w-5"></i>
+                            <span class="hidden md:inline">Leaderboard</span>
+                        </button>
+                        <button onclick="switchTab('amc')" id="sidebar-amc" class="sidebar-btn flex items-center space-x-3 w-full px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-900 hover:text-white transition">
+                            <i class="fa-solid fa-file-contract w-5"></i>
+                            <span class="hidden md:inline">AMC Tracker</span>
+                        </button>
+                        <button onclick="switchTab('contacts')" id="sidebar-contacts" class="sidebar-btn flex items-center space-x-3 w-full px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-900 hover:text-white transition">
+                            <i class="fa-solid fa-address-book w-5"></i>
+                            <span class="hidden md:inline">Contacts Directory</span>
+                        </button>
+                        <button onclick="switchTab('approvals')" id="sidebar-approvals" class="sidebar-btn hidden flex items-center space-x-3 w-full px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-900 hover:text-white transition relative">
+                            <i class="fa-solid fa-user-check w-5"></i>
+                            <span class="hidden md:inline">Agent Approvals</span>
+                            <span id="approval-badge" class="absolute right-3 bg-rose-500 text-white text-xs px-2 py-0.5 rounded-full hidden">0</span>
+                        </button>
+                    </div>
+                </aside>
+
+                <!-- Main Content Area -->
+                <main class="flex-1 p-6 overflow-y-auto bg-slate-900" id="main-content-area">
+                    <!-- Dynamic Tab Contents Injected via JS -->
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application JavaScript Logic -->
     <script>
-        // Pre-configured Super Admins (Hidden secure login bypass)
-        const SUPER_ADMINS = [
-            {
-                name: "Jayesh Bhargav",
-                email: "jayeshbhargav6000@gmail.com",
-                phone: "8857038165",
-                password: "Foxy@6000",
-                role: "Super Admin",
-                status: "approved",
-                team: "Management",
-                points: 150
-            },
-            {
-                name: "Archita Parikh",
-                email: "archita.s.parikh@gmail.com",
-                phone: "9324504175",
-                password: "PokemonGo@Munnchlaxx1998",
-                role: "Super Admin",
-                status: "approved",
-                team: "Management",
-                points: 150
+        // Secure Hashed Super Admin Credentials (Plain text passwords are completely hidden)
+        const SECURE_SUPER_ADMINS = [
+            { email: "jayeshbhargav6000@gmail.com", phone: "8857038165", name: "Jayesh Bhargav", passHash: "7b1348821a416bf9081e7d95d18d408f657a5849800049be173bf93033f20227" },
+            { email: "archita.s.parikh@gmail.com", phone: "9324504175", name: "Archita Parikh", passHash: "c00f7e4dfb1cd1e1bf1f8ed4cd3d63b064c5147be858f921ea1ea34cf69c5c7d" }
+        ];
+
+        // Helper function to safely hash password inputs on the fly using browser cryptography
+        async function sha256(message) {
+            const msgBuffer = new TextEncoder().encode(message);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        // Master Call Codes Lookup
+        const CALL_DESCRIPTIONS = [
+            { code: "COL_01", desc: "First Follow-up Call", points: 10 },
+            { code: "COL_02", desc: "AMC Renewal Discussion", points: 15 },
+            { code: "COL_03", desc: "Technical Issue Resolution", points: 20 },
+            { code: "COL_04", desc: "Missed Follow-up Penalty", points: -2 }
+        ];
+
+        let currentUser = JSON.parse(localStorage.getItem('snor_current_user')) || null;
+        let usersList = JSON.parse(localStorage.getItem('snor_users')) || [];
+        let ticketsList = JSON.parse(localStorage.getItem('snor_tickets')) || [
+            { id: "TICK-1001", client: "Acme Corp", issue: "Server downtime error", status: "Open", priority: "High", agent: "Jayesh Bhargav", created: new Date().toISOString() },
+            { id: "TICK-1002", client: "Globex Ltd", issue: "AMC Contract Renewal", status: "In Progress", priority: "Medium", agent: "Archita Parikh", created: new Date().toISOString() }
+        ];
+        let callLogsList = JSON.parse(localStorage.getItem('snor_calls')) || [];
+        let amcList = JSON.parse(localStorage.getItem('snor_amc')) || [
+            { id: "AMC-501", client: "Alpha Industries", expiry: "2026-12-31", status: "Active", value: "$1,200" }
+        ];
+        let contactsList = JSON.parse(localStorage.getItem('snor_contacts')) || [
+            { name: "Robert Fox", company: "Acme Corp", phone: "555-0192", email: "robert@acme.com" }
+        ];
+
+        window.onload = function() {
+            syncSuperAdmins();
+            if (currentUser) {
+                if (currentUser.status === 'pending') {
+                    showView('pending-view');
+                } else {
+                    showDashboard();
+                }
+            } else {
+                showView('auth-view');
             }
-        ];
-
-        // Master Call Codes Lookup Table
-        const MASTER_CALL_CODES = [
-            { code: "CALL-01", description: "Standard Customer Query / Support", points: 10 },
-            { code: "CALL-02", description: "Technical Troubleshooting & Resolution", points: 20 },
-            { code: "CALL-03", description: "Escalated Issue / Urgent Intervene", points: 30 },
-            { code: "CALL-04", description: "AMC Renewal Discussion", points: 25 },
-            { code: "CALL-05", description: "Follow-up Call (Logged)", points: 15 }
-        ];
-
-        // State Management
-        let state = {
-            view: 'login', // 'login', 'register', 'pending', 'dashboard'
-            currentUser: null,
-            users: JSON.parse(localStorage.getItem('snor_users')) || SUPER_ADMINS,
-            tickets: JSON.parse(localStorage.getItem('snor_tickets')) || [
-                { id: "SNOR-101", title: "Billing discrepancy on invoice #4092", customer: "Acme Corp", priority: "High", status: "Open", assignedTo: "Unassigned", created: "2026-06-01 10:30", sla: "2h remaining" },
-                { id: "SNOR-102", title: "API integration throwing 500 error", customer: "Globex Ltd", priority: "Urgent", status: "In Progress", assignedTo: "Jayesh Bhargav", created: "2026-06-01 09:15", sla: "30m remaining" }
-            ],
-            amcList: JSON.parse(localStorage.getItem('snor_amc')) || [
-                { id: "AMC-501", client: "Acme Corp", expiry: "2026-12-31", status: "Active", value: "$5,000" },
-                { id: "AMC-502", client: "Globex Ltd", expiry: "2026-08-15", status: "Expiring Soon", value: "$3,200" }
-            ],
-            todos: JSON.parse(localStorage.getItem('snor_todos')) || [
-                { id: 1, text: "Review escalated tickets with support lead", completed: false },
-                { id: 2, text: "Verify pending follow-up penalty logs", completed: true }
-            ],
-            contacts: JSON.parse(localStorage.getItem('snor_contacts')) || [
-                { name: "John Smith", company: "Acme Corp", email: "john@acme.com", phone: "555-0192" },
-                { name: "Sarah Connor", company: "Globex Ltd", email: "sconnor@globex.com", phone: "555-0144" }
-            ],
-            currentTab: 'overview',
-            authError: '',
-            registerError: '',
-            registerSuccess: ''
         };
 
-        function saveState() {
-            localStorage.setItem('snor_users', JSON.stringify(state.users));
-            localStorage.setItem('snor_tickets', JSON.stringify(state.tickets));
-            localStorage.setItem('snor_amc', JSON.stringify(state.amcList));
-            localStorage.setItem('snor_todos', JSON.stringify(state.todos));
-            localStorage.setItem('snor_contacts', JSON.stringify(state.contacts));
+        function syncSuperAdmins() {
+            SECURE_SUPER_ADMINS.forEach(sa => {
+                let existing = usersList.find(u => u.email === sa.email);
+                if (!existing) {
+                    usersList.push({ name: sa.name, email: sa.email, phone: sa.phone, passHash: sa.passHash, role: 'Super Admin', status: 'approved' });
+                } else {
+                    existing.role = 'Super Admin';
+                    existing.status = 'approved';
+                    existing.passHash = sa.passHash;
+                }
+            });
+            localStorage.setItem('snor_users', JSON.stringify(usersList));
         }
 
-        function render() {
-            const app = document.getElementById('app');
-            app.innerHTML = '';
+        function showView(viewId) {
+            ['auth-view', 'pending-view', 'dashboard-view'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            document.getElementById(viewId).classList.remove('hidden');
+        }
 
-            if (state.view === 'login') {
-                app.innerHTML = renderLogin();
-            } else if (state.view === 'register') {
-                app.innerHTML = renderRegister();
-            } else if (state.view === 'pending') {
-                app.innerHTML = renderPendingApproval();
-            } else if (state.view === 'dashboard') {
-                app.innerHTML = renderDashboard();
+        function switchAuthTab(tab) {
+            if (tab === 'login') {
+                document.getElementById('form-login').classList.remove('hidden');
+                document.getElementById('form-register').classList.add('hidden');
+                document.getElementById('tab-login').className = "flex-1 py-2 text-sm font-medium rounded-lg bg-indigo-600 text-white transition";
+                document.getElementById('tab-register').className = "flex-1 py-2 text-sm font-medium rounded-lg text-slate-400 hover:text-white transition";
+            } else {
+                document.getElementById('form-login').classList.add('hidden');
+                document.getElementById('form-register').classList.remove('hidden');
+                document.getElementById('tab-register').className = "flex-1 py-2 text-sm font-medium rounded-lg bg-indigo-600 text-white transition";
+                document.getElementById('tab-login').className = "flex-1 py-2 text-sm font-medium rounded-lg text-slate-400 hover:text-white transition";
+            }
+            document.getElementById('auth-error').classList.add('hidden');
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const identifier = document.getElementById('login-id').value.trim();
+            const pass = document.getElementById('login-pass').value;
+            const inputHash = await sha256(pass);
+
+            const user = usersList.find(u => (u.email === identifier || u.phone === identifier) && u.passHash === inputHash);
+            if (!user) {
+                showAuthError("Invalid credentials or user not found.");
+                return;
+            }
+
+            currentUser = user;
+            localStorage.setItem('snor_current_user', JSON.stringify(currentUser));
+
+            if (user.status === 'pending') {
+                showView('pending-view');
+            } else {
+                showDashboard();
             }
         }
 
-        // --- VIEWS ---
+        async function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('reg-name').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+            const phone = document.getElementById('reg-phone').value.trim();
+            const pass = document.getElementById('reg-pass').value;
 
-        function renderLogin() {
-            return `
-                <div class="h-full flex items-center justify-center bg-gradient-to-br from-indigo-900 via-slate-900 to-slate-950 p-4">
-                    <div class="max-w-md w-full bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8 shadow-2xl text-white">
-                        <div class="text-center mb-8">
-                            <div class="inline-flex items-center justify-center w-16 h-16 bg-indigo-600 rounded-xl shadow-lg mb-4 text-2xl font-bold">
-                                <i class="fa-solid fa-headset"></i>
-                            </div>
-                            <h1 class="text-3xl font-extrabold tracking-tight">SNOR-CRM</h1>
-                            <p class="text-indigo-200 text-sm mt-1">Enterprise Helpdesk & Support Portal</p>
-                        </div>
+            const passRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+            if (!passRegex.test(pass)) {
+                showAuthError("Password must be 8+ chars with uppercase, lowercase, number & special character.");
+                return;
+            }
 
-                        ${state.authError ? `<div class="mb-4 bg-red-500/20 border border-red-500 text-red-200 text-sm p-3 rounded-lg"><i class="fa-solid fa-circle-exclamation mr-2"></i>${state.authError}</div>` : ''}
+            if (usersList.some(u => u.email === email)) {
+                showAuthError("Email is already registered.");
+                return;
+            }
 
-                        <form onsubmit="handleLogin(event)" class="space-y-4">
-                            <div>
-                                <label class="block text-xs font-semibold uppercase tracking-wider text-indigo-200 mb-1">Email or Phone</label>
-                                <input type="text" id="loginIdentifier" required class="w-full px-4 py-3 bg-slate-800/60 border border-slate-700 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Enter email or phone">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold uppercase tracking-wider text-indigo-200 mb-1">Password</label>
-                                <input type="password" id="loginPassword" required class="w-full px-4 py-3 bg-slate-800/60 border border-slate-700 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="••••••••">
-                            </div>
-                            <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-lg shadow-lg transition duration-200">Sign In to Dashboard</button>
-                        </form>
+            const passHash = await sha256(pass);
+            const newUser = { name, email, phone, passHash, role: 'Agent', status: 'pending' };
+            usersList.push(newUser);
+            localStorage.setItem('snor_users', JSON.stringify(usersList));
 
-                        <div class="mt-6 text-center text-sm text-indigo-200">
-                            Don't have an account? <button onclick="switchView('register')" class="text-white font-bold underline hover:text-indigo-300">Register as Agent</button>
-                        </div>
-                    </div>
-                </div>
-            `;
+            currentUser = newUser;
+            localStorage.setItem('snor_current_user', JSON.stringify(currentUser));
+            showView('pending-view');
         }
 
-        function renderRegister() {
-            return `
-                <div class="h-full flex items-center justify-center bg-gradient-to-br from-indigo-900 via-slate-900 to-slate-950 p-4 overflow-y-auto">
-                    <div class="max-w-md w-full bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8 shadow-2xl text-white my-auto">
-                        <div class="text-center mb-6">
-                            <h1 class="text-2xl font-bold">SNOR-CRM Registration</h1>
-                            <p class="text-indigo-200 text-xs mt-1">Submit your details for Super Admin approval</p>
-                        </div>
-
-                        ${state.registerError ? `<div class="mb-4 bg-red-500/20 border border-red-500 text-red-200 text-xs p-3 rounded-lg">${state.registerError}</div>` : ''}
-                        ${state.registerSuccess ? `<div class="mb-4 bg-green-500/20 border border-green-500 text-green-200 text-xs p-3 rounded-lg">${state.registerSuccess}</div>` : ''}
-
-                        <form onsubmit="handleRegister(event)" class="space-y-3">
-                            <div>
-                                <label class="block text-xs font-semibold uppercase tracking-wider text-indigo-200 mb-1">Full Name</label>
-                                <input type="text" id="regName" required class="w-full px-3 py-2 bg-slate-800/60 border border-slate-700 rounded-lg text-white text-sm" placeholder="John Doe">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold uppercase tracking-wider text-indigo-200 mb-1">Email Address</label>
-                                <input type="email" id="regEmail" required class="w-full px-3 py-2 bg-slate-800/60 border border-slate-700 rounded-lg text-white text-sm" placeholder="john@example.com">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold uppercase tracking-wider text-indigo-200 mb-1">Phone Number</label>
-                                <input type="tel" id="regPhone" required class="w-full px-3 py-2 bg-slate-800/60 border border-slate-700 rounded-lg text-white text-sm" placeholder="9876543210">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold uppercase tracking-wider text-indigo-200 mb-1">Password</label>
-                                <input type="password" id="regPassword" required class="w-full px-3 py-2 bg-slate-800/60 border border-slate-700 rounded-lg text-white text-sm" placeholder="Uppercase, lowercase, number, special char">
-                                <p class="text-[10px] text-indigo-300 mt-1">Must include uppercase, lowercase, number & special sign.</p>
-                            </div>
-                            <button type="submit" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-lg text-sm shadow-lg">Submit Registration</button>
-                        </form>
-
-                        <div class="mt-4 text-center text-xs text-indigo-200">
-                            Already approved? <button onclick="switchView('login')" class="text-white font-bold underline">Back to Login</button>
-                        </div>
-                    </div>
-                </div>
-            `;
+        function showAuthError(msg) {
+            const err = document.getElementById('auth-error');
+            err.innerText = msg;
+            err.classList.remove('hidden');
         }
 
-        function renderPendingApproval() {
-            return `
-                <div class="h-full flex items-center justify-center bg-slate-900 p-4 text-white text-center">
-                    <div class="max-w-md w-full bg-slate-800 border border-slate-700 rounded-2xl p-8 shadow-xl">
-                        <div class="w-16 h-16 bg-amber-500/20 text-amber-400 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
-                            <i class="fa-solid fa-hourglass-half"></i>
-                        </div>
-                        <h2 class="text-2xl font-bold mb-2">Account Pending Approval</h2>
-                        <p class="text-slate-300 text-sm mb-6">Your registration has been received for SNOR-CRM. A Super Admin (Jayesh or Archita) must approve your account before access is granted.</p>
-                        <button onclick="logout()" class="px-6 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm font-semibold transition">Sign Out / Return</button>
-                    </div>
-                </div>
-            `;
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('snor_current_user');
+            showView('auth-view');
         }
 
-        function renderDashboard() {
-            const isAdmin = state.currentUser.role === 'Super Admin';
-            const pendingCount = state.users.filter(u => u.status === 'pending').length;
+        function showDashboard() {
+            showView('dashboard-view');
+            document.getElementById('nav-user-name').innerText = currentUser.name;
+            document.getElementById('nav-user-email').innerText = currentUser.email;
+            document.getElementById('nav-role-badge').innerText = currentUser.role;
 
-            return `
-                <div class="h-full flex flex-col bg-slate-100">
-                    <!-- Top Navigation Bar -->
-                    <header class="bg-slate-900 text-white px-6 py-3 flex items-center justify-between shadow-md">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-9 h-9 bg-indigo-600 rounded-lg flex items-center justify-center font-bold">
-                                <i class="fa-solid fa-headset text-sm"></i>
-                            </div>
-                            <span class="text-lg font-bold tracking-wide">SNOR-CRM</span>
-                        </div>
-                        <div class="flex items-center space-x-4">
-                            <div class="text-right">
-                                <div class="text-sm font-semibold">${state.currentUser.name}</div>
-                                <div class="text-xs text-indigo-400">${state.currentUser.role}</div>
-                            </div>
-                            <button onclick="logout()" title="Logout" class="p-2 bg-slate-800 hover:bg-red-600 rounded-lg text-slate-300 hover:text-white transition"><i class="fa-solid fa-power-off"></i></button>
-                        </div>
-                    </header>
+            const approvalsBtn = document.getElementById('sidebar-approvals');
+            if (currentUser.role === 'Super Admin') {
+                approvalsBtn.classList.remove('hidden');
+                updateApprovalBadge();
+            } else {
+                approvalsBtn.classList.add('hidden');
+            }
 
-                    <!-- Main Body Layout -->
-                    <div class="flex-1 flex overflow-hidden">
-                        <!-- Sidebar -->
-                        <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col border-t border-slate-800">
-                            <nav class="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
-                                <button onclick="setTab('overview')" class="w-full flex items-center space-x-3 px-4 py-2.5 rounded-lg text-sm font-medium ${state.currentTab === 'overview' ? 'bg-indigo-600 text-white' : 'hover:bg-slate-800'}">
-                                    <i class="fa-solid fa-chart-pie w-5"></i><span>Overview</span>
-                                </button>
-                                <button onclick="setTab('tickets')" class="w-full flex items-center space-x-3 px-4 py-2.5 rounded-lg text-sm font-medium ${state.currentTab === 'tickets' ? 'bg-indigo-600 text-white' : 'hover:bg-slate-800'}">
-                                    <i class="fa-solid fa-ticket w-5"></i><span>Support Tickets</span>
-                                </button>
-                                <button onclick="setTab('callcodes')" class="w-full flex items-center space-x-3 px-4 py-2.5 rounded-lg text-sm font-medium ${state.currentTab === 'callcodes' ? 'bg-indigo-600 text-white' : 'hover:bg-slate-800'}">
-                                    <i class="fa-solid fa-phone-volume w-5"></i><span>Master Call Codes</span>
-                                </button>
-                                <button onclick="setTab('amc')" class="w-full flex items-center space-x-3 px-4 py-2.5 rounded-lg text-sm font-medium ${state.currentTab === 'amc' ? 'bg-indigo-600 text-white' : 'hover:bg-slate-800'}">
-                                    <i class="fa-solid fa-file-contract w-5"></i><span>AMC Management</span>
-                                </button>
-                                <button onclick="setTab('todos')" class="w-full flex items-center space-x-3 px-4 py-2.5 rounded-lg text-sm font-medium ${state.currentTab === 'todos' ? 'bg-indigo-600 text-white' : 'hover:bg-slate-800'}">
-                                    <i class="fa-solid fa-list-check w-5"></i><span>To-Do List</span>
-                                </button>
-                                <button onclick="setTab('contacts')" class="w-full flex items-center space-x-3 px-4 py-2.5 rounded-lg text-sm font-medium ${state.currentTab === 'contacts' ? 'bg-indigo-600 text-white' : 'hover:bg-slate-800'}">
-                                    <i class="fa-solid fa-address-book w-5"></i><span>Contacts Directory</span>
-                                </button>
-                                <button onclick="setTab('leaderboard')" class="w-full flex items-center space-x-3 px-4 py-2.5 rounded-lg text-sm font-medium ${state.currentTab === 'leaderboard' ? 'bg-indigo-600 text-white' : 'hover:bg-slate-800'}">
-                                    <i class="fa-solid fa-trophy w-5"></i><span>Leaderboard & Points</span>
-                                </button>
-                                ${isAdmin ? `
-                                <button onclick="setTab('approvals')" class="w-full flex items-center justify-between px-4 py-2.5 rounded-lg text-sm font-medium ${state.currentTab === 'approvals' ? 'bg-indigo-600 text-white' : 'hover:bg-slate-800'}">
-                                    <div class="flex items-center space-x-3"><i class="fa-solid fa-user-check w-5"></i><span>User Approvals</span></div>
-                                    ${pendingCount > 0 ? `<span class="bg-red-500 text-white text-xs px-2 py-0.5 rounded-full font-bold">${pendingCount}</span>` : ''}
-                                </button>
-                                ` : ''}
-                            </nav>
-                        </aside>
-
-                        <!-- Content Area -->
-                        <main class="flex-1 p-6 overflow-y-auto">
-                            ${state.currentTab === 'overview' ? renderOverviewTab() : ''}
-                            ${state.currentTab === 'tickets' ? renderTicketsTab() : ''}
-                            ${state.currentTab === 'callcodes' ? renderCallCodesTab() : ''}
-                            ${state.currentTab === 'amc' ? renderAmcTab() : ''}
-                            ${state.currentTab === 'todos' ? renderTodosTab() : ''}
-                            ${state.currentTab === 'contacts' ? renderContactsTab() : ''}
-                            ${state.currentTab === 'leaderboard' ? renderLeaderboardTab() : ''}
-                            ${state.currentTab === 'approvals' && isAdmin ? renderApprovalsTab() : ''}
-                        </main>
-                    </div>
-                </div>
-            `;
+            switchTab('overview');
         }
 
-        function renderOverviewTab() {
-            const openCount = state.tickets.filter(t => t.status === 'Open' || t.status === 'In Progress').length;
-            return `
-                <div class="space-y-6">
-                    <h2 class="text-2xl font-bold text-slate-800">SNOR-CRM Overview Dashboard</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
-                            <div>
-                                <p class="text-xs uppercase tracking-wider text-slate-500 font-semibold">Active Tickets</p>
-                                <h3 class="text-3xl font-extrabold text-slate-800 mt-1">${openCount}</h3>
-                            </div>
-                            <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-xl"><i class="fa-solid fa-ticket"></i></div>
-                        </div>
-                        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
-                            <div>
-                                <p class="text-xs uppercase tracking-wider text-slate-500 font-semibold">Total Agents</p>
-                                <h3 class="text-3xl font-extrabold text-slate-800 mt-1">${state.users.filter(u => u.status === 'approved').length}</h3>
-                            </div>
-                            <div class="w-12 h-12 bg-green-50 text-green-600 rounded-xl flex items-center justify-center text-xl"><i class="fa-solid fa-users"></i></div>
-                        </div>
-                        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
-                            <div>
-                                <p class="text-xs uppercase tracking-wider text-slate-500 font-semibold">Active AMCs</p>
-                                <h3 class="text-3xl font-extrabold text-slate-800 mt-1">${state.amcList.length}</h3>
-                            </div>
-                            <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-xl"><i class="fa-solid fa-file-contract"></i></div>
-                        </div>
-                        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
-                            <div>
-                                <p class="text-xs uppercase tracking-wider text-slate-500 font-semibold">Pending Approvals</p>
-                                <h3 class="text-3xl font-extrabold text-slate-800 mt-1">${state.users.filter(u => u.status === 'pending').length}</h3>
-                            </div>
-                            <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center text-xl"><i class="fa-solid fa-user-clock"></i></div>
-                        </div>
-                    </div>
-                </div>
-            `;
+        function updateApprovalBadge() {
+            const pendingCount = usersList.filter(u => u.status === 'pending').length;
+            const badge = document.getElementById('approval-badge');
+            if (pendingCount > 0) {
+                badge.innerText = pendingCount;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
         }
 
-        function renderTicketsTab() {
-            return `
-                <div class="space-y-6">
-                    <div class="flex items-center justify-between">
-                        <h2 class="text-2xl font-bold text-slate-800">Support Tickets & SLA Timers</h2>
-                        <button onclick="alert('Ticket creation modal placeholder')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm font-semibold shadow"><i class="fa-solid fa-plus mr-2"></i>New Ticket</button>
+        let activeTab = 'overview';
+        function switchTab(tab) {
+            activeTab = tab;
+            document.querySelectorAll('.sidebar-btn').forEach(btn => {
+                btn.className = "sidebar-btn flex items-center space-x-3 w-full px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-900 hover:text-white transition";
+            });
+            const activeBtn = document.getElementById(`sidebar-${tab}`);
+            if (activeBtn) {
+                activeBtn.className = "sidebar-btn flex items-center space-x-3 w-full px-4 py-3 rounded-xl text-sm font-medium bg-indigo-600 text-white transition";
+            }
+            renderTabContent();
+        }
+
+        function renderTabContent() {
+            const container = document.getElementById('main-content-area');
+            if (activeTab === 'overview') {
+                container.innerHTML = `
+                    <h2 class="text-xl font-bold text-white mb-6">Operations Overview</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                        <div class="bg-slate-800 border border-slate-700/50 p-5 rounded-2xl">
+                            <div class="text-slate-400 text-xs font-semibold uppercase">Total Tickets</div>
+                            <div class="text-3xl font-bold text-white mt-2">${ticketsList.length}</div>
+                        </div>
+                        <div class="bg-slate-800 border border-slate-700/50 p-5 rounded-2xl">
+                            <div class="text-slate-400 text-xs font-semibold uppercase">Active AMCs</div>
+                            <div class="text-3xl font-bold text-emerald-400 mt-2">${amcList.length}</div>
+                        </div>
+                        <div class="bg-slate-800 border border-slate-700/50 p-5 rounded-2xl">
+                            <div class="text-slate-400 text-xs font-semibold uppercase">Call Logs Recorded</div>
+                            <div class="text-3xl font-bold text-indigo-400 mt-2">${callLogsList.length}</div>
+                        </div>
+                        <div class="bg-slate-800 border border-slate-700/50 p-5 rounded-2xl">
+                            <div class="text-slate-400 text-xs font-semibold uppercase">Pending Approvals</div>
+                            <div class="text-3xl font-bold text-amber-400 mt-2">${usersList.filter(u => u.status === 'pending').length}</div>
+                        </div>
                     </div>
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                        <table class="w-full text-left border-collapse text-sm">
-                            <thead>
-                                <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase text-xs">
-                                    <th class="p-4 font-semibold">ID</th>
-                                    <th class="p-4 font-semibold">Title</th>
-                                    <th class="p-4 font-semibold">Customer</th>
-                                    <th class="p-4 font-semibold">Priority</th>
-                                    <th class="p-4 font-semibold">Status</th>
-                                    <th class="p-4 font-semibold">SLA Timer</th>
-                                    <th class="p-4 font-semibold">Assigned</th>
+                `;
+            } else if (activeTab === 'tickets') {
+                container.innerHTML = `
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-bold text-white">Tickets & SLA Management</h2>
+                        <button onclick="openNewTicketModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-sm px-4 py-2 rounded-xl transition">New Ticket</button>
+                    </div>
+                    <div class="bg-slate-800 border border-slate-700/50 rounded-2xl overflow-hidden">
+                        <table class="w-full text-left text-sm text-slate-300">
+                            <thead class="bg-slate-900 text-xs uppercase text-slate-400 border-b border-slate-700">
+                                <tr>
+                                    <th class="p-4">ID</th>
+                                    <th class="p-4">Client</th>
+                                    <th class="p-4">Issue</th>
+                                    <th class="p-4">Priority</th>
+                                    <th class="p-4">Status</th>
+                                    <th class="p-4">Assigned Agent</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-slate-100">
-                                ${state.tickets.map(t => `
-                                    <tr class="hover:bg-slate-50">
-                                        <td class="p-4 font-mono font-medium text-indigo-600">${t.id}</td>
-                                        <td class="p-4 font-medium text-slate-800">${t.title}</td>
-                                        <td class="p-4 text-slate-600">${t.customer}</td>
-                                        <td class="p-4"><span class="px-2.5 py-1 rounded-full text-xs font-semibold ${t.priority === 'Urgent' ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700'}">${t.priority}</span></td>
-                                        <td class="p-4"><span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">${t.status}</span></td>
-                                        <td class="p-4 text-xs font-mono font-bold text-rose-600"><i class="fa-regular fa-clock mr-1"></i>${t.sla}</td>
-                                        <td class="p-4 text-slate-600">${t.assignedTo}</td>
+                            <tbody class="divide-y divide-slate-700">
+                                ${ticketsList.map(t => `
+                                    <tr>
+                                        <td class="p-4 font-mono text-indigo-400">${t.id}</td>
+                                        <td class="p-4 font-semibold text-white">${t.client}</td>
+                                        <td class="p-4">${t.issue}</td>
+                                        <td class="p-4"><span class="px-2 py-1 rounded text-xs ${t.priority==='High'?'bg-rose-500/20 text-rose-400':'bg-amber-500/20 text-amber-400'}">${t.priority}</span></td>
+                                        <td class="p-4">${t.status}</td>
+                                        <td class="p-4 text-slate-400">${t.agent}</td>
                                     </tr>
                                 `).join('')}
                             </tbody>
                         </table>
                     </div>
-                </div>
-            `;
-        }
-
-        function renderCallCodesTab() {
-            return `
-                <div class="space-y-6">
-                    <h2 class="text-2xl font-bold text-slate-800">Master Call Codes & Points Mapping</h2>
-                    <p class="text-sm text-slate-600">Automated call descriptions lookup table with auto-populated codes and point multipliers (-2 point penalty applies for missed follow-ups).</p>
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                        <table class="w-full text-left border-collapse text-sm">
-                            <thead>
-                                <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase text-xs">
-                                    <th class="p-4 font-semibold">Call Code</th>
-                                    <th class="p-4 font-semibold">Description</th>
-                                    <th class="p-4 font-semibold">Assigned Points</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100">
-                                ${MASTER_CALL_CODES.map(c => `
-                                    <tr class="hover:bg-slate-50">
-                                        <td class="p-4 font-mono font-bold text-indigo-600">${c.code}</td>
-                                        <td class="p-4 text-slate-800">${c.description}</td>
-                                        <td class="p-4 font-semibold text-green-600">+${c.points} pts</td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
+                `;
+            } else if (activeTab === 'calls') {
+                container.innerHTML = `
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-bold text-white">Call Logs & Point Penalties (-2 for Missed Follow-up)</h2>
+                        <button onclick="logNewCall()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-sm px-4 py-2 rounded-xl transition">Log Call</button>
                     </div>
-                </div>
-            `;
-        }
-
-        function renderAmcTab() {
-            return `
-                <div class="space-y-6">
-                    <h2 class="text-2xl font-bold text-slate-800">AMC Management</h2>
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                        <table class="w-full text-left border-collapse text-sm">
-                            <thead>
-                                <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase text-xs">
-                                    <th class="p-4 font-semibold">Contract ID</th>
-                                    <th class="p-4 font-semibold">Client Name</th>
-                                    <th class="p-4 font-semibold">Expiry Date</th>
-                                    <th class="p-4 font-semibold">Value</th>
-                                    <th class="p-4 font-semibold">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100">
-                                ${state.amcList.map(a => `
-                                    <tr class="hover:bg-slate-50">
-                                        <td class="p-4 font-mono font-medium text-indigo-600">${a.id}</td>
-                                        <td class="p-4 font-medium text-slate-800">${a.client}</td>
-                                        <td class="p-4 text-slate-600">${a.expiry}</td>
-                                        <td class="p-4 font-semibold text-slate-800">${a.value}</td>
-                                        <td class="p-4"><span class="px-2.5 py-1 rounded-full text-xs font-semibold ${a.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}">${a.status}</span></td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            `;
-        }
-
-        function renderTodosTab() {
-            return `
-                <div class="space-y-6">
-                    <h2 class="text-2xl font-bold text-slate-800">To-Do List</h2>
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 max-w-2xl space-y-4">
-                        <div class="flex space-x-2">
-                            <input type="text" id="newTodoText" placeholder="Add a new task..." class="flex-1 px-4 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                            <button onclick="addTodo()" class="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-semibold hover:bg-indigo-500">Add Task</button>
-                        </div>
-                        <div class="divide-y divide-slate-100">
-                            ${state.todos.map(todo => `
-                                <div class="py-3 flex items-center justify-between">
-                                    <div class="flex items-center space-x-3">
-                                        <input type="checkbox" ${todo.completed ? 'checked' : ''} onchange="toggleTodo(${todo.id})" class="w-4 h-4 text-indigo-600 rounded">
-                                        <span class="text-sm ${todo.completed ? 'line-through text-slate-400' : 'text-slate-800'}">${todo.text}</span>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-slate-800 border border-slate-700/50 p-5 rounded-2xl">
+                            <h3 class="text-sm font-semibold uppercase text-slate-400 mb-4">Master Call Codes Lookup</h3>
+                            <div class="space-y-3">
+                                ${CALL_DESCRIPTIONS.map(c => `
+                                    <div class="flex justify-between items-center p-3 bg-slate-900 rounded-xl border border-slate-700">
+                                        <div>
+                                            <span class="font-mono text-indigo-400 font-bold">${c.code}</span>
+                                            <div class="text-sm text-slate-200">${c.desc}</div>
+                                        </div>
+                                        <span class="px-3 py-1 rounded-lg text-xs font-bold ${c.points < 0 ? 'bg-rose-500/20 text-rose-400' : 'bg-emerald-500/20 text-emerald-400'}">${c.points > 0 ? '+' : ''}${c.points} pts</span>
                                     </div>
-                                    <button onclick="deleteTodo(${todo.id})" class="text-slate-400 hover:text-red-600 text-sm"><i class="fa-solid fa-trash"></i></button>
+                                `).join('')}
+                            </div>
+                        </div>
+                        <div class="bg-slate-800 border border-slate-700/50 p-5 rounded-2xl">
+                            <h3 class="text-sm font-semibold uppercase text-slate-400 mb-4">Recent Call Activity</h3>
+                            <div class="space-y-3">
+                                ${callLogsList.length === 0 ? '<p class="text-sm text-slate-500">No calls logged yet.</p>' : callLogsList.map(l => `
+                                    <div class="p-3 bg-slate-900 rounded-xl border border-slate-700 flex justify-between items-center">
+                                        <div>
+                                            <div class="text-sm font-semibold text-white">${l.client}</div>
+                                            <div class="text-xs text-slate-400">${l.desc}</div>
+                                        </div>
+                                        <span class="text-xs font-bold ${l.points < 0 ? 'text-rose-400' : 'text-emerald-400'}">${l.points > 0 ? '+' : ''}${l.points} pts</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (activeTab === 'leaderboard') {
+                container.innerHTML = `
+                    <h2 class="text-xl font-bold text-white mb-6">Agent Leaderboard & Points</h2>
+                    <div class="bg-slate-800 border border-slate-700/50 rounded-2xl p-6">
+                        <div class="space-y-3">
+                            ${usersList.filter(u => u.status === 'approved').map((u, i) => `
+                                <div class="flex items-center justify-between p-4 bg-slate-900 rounded-xl border border-slate-700">
+                                    <div class="flex items-center space-x-3">
+                                        <span class="w-8 h-8 rounded-full bg-indigo-600/20 text-indigo-400 font-bold flex items-center justify-center text-sm">#${i+1}</span>
+                                        <div>
+                                            <div class="font-semibold text-white">${u.name}</div>
+                                            <div class="text-xs text-slate-400">${u.role}</div>
+                                        </div>
+                                    </div>
+                                    <span class="font-bold text-emerald-400">100 Pts</span>
                                 </div>
                             `).join('')}
                         </div>
                     </div>
-                </div>
-            `;
-        }
-
-        function renderContactsTab() {
-            return `
-                <div class="space-y-6">
-                    <h2 class="text-2xl font-bold text-slate-800">Contacts Directory</h2>
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                        <table class="w-full text-left border-collapse text-sm">
-                            <thead>
-                                <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase text-xs">
-                                    <th class="p-4 font-semibold">Name</th>
-                                    <th class="p-4 font-semibold">Company</th>
-                                    <th class="p-4 font-semibold">Email</th>
-                                    <th class="p-4 font-semibold">Phone</th>
+                `;
+            } else if (activeTab === 'amc') {
+                container.innerHTML = `
+                    <h2 class="text-xl font-bold text-white mb-6">AMC Contracts Tracker</h2>
+                    <div class="bg-slate-800 border border-slate-700/50 rounded-2xl overflow-hidden">
+                        <table class="w-full text-left text-sm text-slate-300">
+                            <thead class="bg-slate-900 text-xs uppercase text-slate-400 border-b border-slate-700">
+                                <tr>
+                                    <th class="p-4">Contract ID</th>
+                                    <th class="p-4">Client</th>
+                                    <th class="p-4">Expiry Date</th>
+                                    <th class="p-4">Status</th>
+                                    <th class="p-4">Value</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-slate-100">
-                                ${state.contacts.map(c => `
-                                    <tr class="hover:bg-slate-50">
-                                        <td class="p-4 font-medium text-slate-800">${c.name}</td>
-                                        <td class="p-4 text-slate-600">${c.company}</td>
-                                        <td class="p-4 text-indigo-600">${c.email}</td>
-                                        <td class="p-4 text-slate-600">${c.phone}</td>
+                            <tbody class="divide-y divide-slate-700">
+                                ${amcList.map(a => `
+                                    <tr>
+                                        <td class="p-4 font-mono text-indigo-400">${a.id}</td>
+                                        <td class="p-4 font-semibold text-white">${a.client}</td>
+                                        <td class="p-4">${a.expiry}</td>
+                                        <td class="p-4"><span class="px-2 py-1 rounded text-xs bg-emerald-500/20 text-emerald-400">${a.status}</span></td>
+                                        <td class="p-4 font-semibold text-white">${a.value}</td>
                                     </tr>
                                 `).join('')}
                             </tbody>
                         </table>
                     </div>
-                </div>
-            `;
-        }
-
-        function renderLeaderboardTab() {
-            const sortedUsers = [...state.users.filter(u => u.status === 'approved')].sort((a,b) => (b.points || 0) - (a.points || 0));
-            return `
-                <div class="space-y-6">
-                    <h2 class="text-2xl font-bold text-slate-800">Agent Leaderboard & Points</h2>
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden max-w-2xl">
-                        <table class="w-full text-left border-collapse text-sm">
-                            <thead>
-                                <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase text-xs">
-                                    <th class="p-4 font-semibold">Rank</th>
-                                    <th class="p-4 font-semibold">Agent Name</th>
-                                    <th class="p-4 font-semibold">Role</th>
-                                    <th class="p-4 font-semibold text-right">Points</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100">
-                                ${sortedUsers.map((u, index) => `
-                                    <tr class="hover:bg-slate-50">
-                                        <td class="p-4 font-bold text-indigo-600">#${index + 1}</td>
-                                        <td class="p-4 font-medium text-slate-800">${u.name}</td>
-                                        <td class="p-4 text-slate-600">${u.role}</td>
-                                        <td class="p-4 font-extrabold text-green-600 text-right">${u.points || 0} pts</td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
+                `;
+            } else if (activeTab === 'contacts') {
+                container.innerHTML = `
+                    <h2 class="text-xl font-bold text-white mb-6">Contacts Directory</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        ${contactsList.map(c => `
+                            <div class="bg-slate-800 border border-slate-700/50 p-5 rounded-2xl">
+                                <div class="font-bold text-white text-base mb-1">${c.name}</div>
+                                <div class="text-xs text-indigo-400 font-semibold mb-3">${c.company}</div>
+                                <div class="text-sm text-slate-300 space-y-1">
+                                    <div><i class="fa-solid fa-phone w-5 text-slate-500"></i> ${c.phone}</div>
+                                    <div><i class="fa-solid fa-envelope w-5 text-slate-500"></i> ${c.email}</div>
+                                </div>
+                            </div>
+                        `).join('')}
                     </div>
-                </div>
-            `;
-        }
-
-        function renderApprovalsTab() {
-            const pendingUsers = state.users.filter(u => u.status === 'pending');
-            return `
-                <div class="space-y-6">
-                    <h2 class="text-2xl font-bold text-slate-800">Agent Approvals & Management</h2>
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                        ${pendingUsers.length === 0 ? `
-                            <div class="p-8 text-center text-slate-500">No agents currently waiting for approval.</div>
-                        ` : `
-                            <table class="w-full text-left border-collapse text-sm">
-                                <thead>
-                                    <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase text-xs">
-                                        <th class="p-4 font-semibold">Name</th>
-                                        <th class="p-4 font-semibold">Email</th>
-                                        <th class="p-4 font-semibold">Phone</th>
-                                        <th class="p-4 font-semibold">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-slate-100">
-                                    ${pendingUsers.map(u => `
-                                        <tr>
-                                            <td class="p-4 font-medium text-slate-800">${u.name}</td>
-                                            <td class="p-4 text-slate-600">${u.email}</td>
-                                            <td class="p-4 text-slate-600">${u.phone}</td>
-                                            <td class="p-4 space-x-2">
-                                                <button onclick="approveUser('${u.email}')" class="px-3 py-1.5 bg-green-600 hover:bg-green-500 text-white rounded-lg text-xs font-semibold shadow">Approve</button>
-                                                <button onclick="rejectUser('${u.email}')" class="px-3 py-1.5 bg-red-600 hover:bg-red-500 text-white rounded-lg text-xs font-semibold shadow">Reject</button>
-                                            </td>
-                                        </tr>
-                                    `).join('')}
-                                </tbody>
-                            </table>
+                `;
+            } else if (activeTab === 'approvals' && currentUser.role === 'Super Admin') {
+                const pendingUsers = usersList.filter(u => u.status === 'pending');
+                container.innerHTML = `
+                    <h2 class="text-xl font-bold text-white mb-6">Pending Agent Approvals</h2>
+                    <div class="bg-slate-800 border border-slate-700/50 rounded-2xl p-6">
+                        ${pendingUsers.length === 0 ? '<p class="text-sm text-slate-400">No pending agent registrations.</p>' : `
+                            <div class="space-y-4">
+                                ${pendingUsers.map(u => `
+                                    <div class="p-4 bg-slate-900 rounded-xl border border-slate-700 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                                        <div>
+                                            <div class="font-bold text-white text-base">${u.name}</div>
+                                            <div class="text-xs text-slate-400">${u.email} • ${u.phone}</div>
+                                        </div>
+                                        <button onclick="approveAgent('${u.email}')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-sm px-4 py-2 rounded-xl transition">Approve & Assign</button>
+                                    </div>
+                                `).join('')}
+                            </div>
                         `}
                     </div>
-                </div>
-            `;
+                `;
+            }
         }
 
-        // --- CONTROLLERS ---
+        function approveAgent(email) {
+            const u = usersList.find(user => user.email === email);
+            if (u) {
+                u.status = 'approved';
+                localStorage.setItem('snor_users', JSON.stringify(usersList));
+                updateApprovalBadge();
+                renderTabContent();
+            }
+        }
 
-        function handleLogin(e) {
-            e.preventDefault();
-            const identifier = document.getElementById('loginIdentifier').value.trim();
-            const password = document.getElementById('loginPassword').value;
+        function openNewTicketModal() {
+            const client = prompt("Enter Client Name:");
+            const issue = prompt("Enter Issue Description:");
+            if (client && issue) {
+                ticketsList.push({
+                    id: "TICK-" + Math.floor(1000 + Math.random() * 9000),
+                    client,
+                    issue,
+                    status: "Open",
+                    priority: "Medium",
+                    agent: currentUser.name,
+                    created: new Date().toISOString()
+                });
+                localStorage.setItem('snor_tickets', JSON.stringify(ticketsList));
+                renderTabContent();
+            }
+        }
 
-            state.authError = '';
+        function logNewCall() {
+            const client = prompt("Enter Client Name:");
+            const codeInput = prompt("Enter Call Code (COL_01, COL_02, COL_03, or COL_04 for -2 penalty):") || "COL_01";
+            const match = CALL_DESCRIPTIONS.find(c => c.code === codeInput) || CALL_DESCRIPTIONS[0];
             
-            // Check hardcoded super admins first
-            const matchedSuperAdmin = SUPER_ADMINS.find(sa => (sa.email === identifier || sa.phone === identifier) && sa.password === password);
-            if (matchedSuperAdmin) {
-                // Ensure they exist in users list with approved status
-                let existingUser = state.users.find(u => u.email === matchedSuperAdmin.email);
-                if (!existingUser) {
-                    state.users.push(matchedSuperAdmin);
-                    saveState();
-                }
-                state.currentUser = matchedSuperAdmin;
-                state.view = 'dashboard';
-                render();
-                return;
-            }
-
-            const user = state.users.find(u => (u.email === identifier || u.phone === identifier) && u.password === password);
-
-            if (!user) {
-                state.authError = "Invalid credentials or incorrect login information.";
-                render();
-                return;
-            }
-
-            if (user.status === 'pending') {
-                state.currentUser = user;
-                state.view = 'pending';
-                render();
-                return;
-            }
-
-            state.currentUser = user;
-            state.view = 'dashboard';
-            render();
-        }
-
-        function handleRegister(e) {
-            e.preventDefault();
-            const name = document.getElementById('regName').value.trim();
-            const email = document.getElementById('regEmail').value.trim();
-            const phone = document.getElementById('regPhone').value.trim();
-            const password = document.getElementById('regPassword').value;
-
-            state.registerError = '';
-            state.registerSuccess = '';
-
-            const pwdRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$/;
-            if (!pwdRegex.test(password)) {
-                state.registerError = "Password must contain uppercase, lowercase, number & special character.";
-                render();
-                return;
-            }
-
-            if (state.users.some(u => u.email === email || u.phone === phone)) {
-                state.registerError = "An account with this email or phone already exists.";
-                render();
-                return;
-            }
-
-            state.users.push({
-                name, email, phone, password, role: 'Agent', status: 'pending', team: 'Support', points: 50
+            callLogsList.push({
+                client,
+                code: match.code,
+                desc: match.desc,
+                points: match.points,
+                date: new Date().toISOString()
             });
-            saveState();
-
-            state.registerSuccess = "Registration submitted successfully! Please wait for Super Admin approval.";
-            render();
+            localStorage.setItem('snor_calls', JSON.stringify(callLogsList));
+            renderTabContent();
         }
-
-        function approveUser(email) {
-            const user = state.users.find(u => u.email === email);
-            if (user) {
-                user.status = 'approved';
-                saveState();
-                render();
-            }
-        }
-
-        function rejectUser(email) {
-            state.users = state.users.filter(u => u.email !== email);
-            saveState();
-            render();
-        }
-
-        function addTodo() {
-            const text = document.getElementById('newTodoText').value.trim();
-            if (text) {
-                state.todos.push({ id: Date.now(), text, completed: false });
-                saveState();
-                render();
-            }
-        }
-
-        function toggleTodo(id) {
-            const todo = state.todos.find(t => t.id === id);
-            if (todo) {
-                todo.completed = !todo.completed;
-                saveState();
-                render();
-            }
-        }
-
-        function deleteTodo(id) {
-            state.todos = state.todos.filter(t => t.id !== id);
-            saveState();
-            render();
-        }
-
-        function switchView(viewName) {
-            state.view = viewName;
-            state.authError = '';
-            state.registerError = '';
-            state.registerSuccess = '';
-            render();
-        }
-
-        function setTab(tabName) {
-            state.currentTab = tabName;
-            render();
-        }
-
-        function logout() {
-            state.currentUser = null;
-            state.view = 'login';
-            render();
-        }
-
-        // Initial Render
-        render();
     </script>
 </body>
 </html>
