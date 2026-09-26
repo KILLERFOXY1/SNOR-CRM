@@ -1,571 +1,1193 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SNOR-CRM - Helpdesk & Operations Manager</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SNOR-CRM Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-slate-900 text-slate-100 font-sans antialiased min-h-screen flex flex-col">
+<body class="bg-slate-900 text-slate-100 font-sans antialiased">
 
-    <!-- App Root Container -->
-    <div id="app" class="flex-1 flex flex-col">
-        
-        <!-- AUTH VIEW (Login / Register) -->
-        <div id="auth-view" class="flex-1 flex items-center justify-center p-4 bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950">
-            <div class="max-w-md w-full bg-slate-900/80 backdrop-blur border border-slate-800 p-8 rounded-2xl shadow-2xl">
-                <div class="text-center mb-8">
-                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-indigo-600 text-white text-2xl font-bold mb-3 shadow-lg shadow-indigo-500/30">
-                        <i class="fa-solid fa-headset"></i>
-                    </div>
-                    <h1 class="text-2xl font-bold tracking-tight text-white">SNOR-CRM</h1>
-                    <p class="text-sm text-slate-400 mt-1">Enterprise Helpdesk & Operations Portal</p>
-                </div>
+  <!-- Login / Registration Screen Overlay -->
+  <div id="login-screen" class="fixed inset-0 bg-slate-950 flex items-center justify-center z-50">
+    <div class="bg-slate-900 border border-slate-800 p-8 rounded-2xl w-full max-w-md space-y-6 shadow-2xl">
+      <div class="text-center space-y-2">
+        <div class="bg-indigo-600 w-12 h-12 rounded-xl flex items-center justify-center text-white text-xl font-bold mx-auto"><i class="fa-solid fa-headset"></i></div>
+        <h2 id="auth-title" class="text-2xl font-extrabold tracking-wider bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">SNOR-CRM Sign In</h2>
+        <p id="auth-subtitle" class="text-xs text-slate-400">Please sign in to access your dashboard</p>
+      </div>
 
-                <!-- Tabs: Login vs Register -->
-                <div class="flex rounded-xl bg-slate-800 p-1 mb-6">
-                    <button onclick="switchAuthTab('login')" id="tab-login" class="flex-1 py-2 text-sm font-medium rounded-lg bg-indigo-600 text-white transition">Sign In</button>
-                    <button onclick="switchAuthTab('register')" id="tab-register" class="flex-1 py-2 text-sm font-medium rounded-lg text-slate-400 hover:text-white transition">Register Agent</button>
-                </div>
-
-                <!-- Login Form -->
-                <form id="form-login" onsubmit="handleLogin(event)" class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Email or Phone</label>
-                        <input type="text" id="login-id" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500 text-white" placeholder="name@company.com or phone">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Password</label>
-                        <input type="password" id="login-pass" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500 text-white" placeholder="••••••••">
-                    </div>
-                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-3 rounded-xl transition shadow-lg shadow-indigo-600/20">Sign In to Dashboard</button>
-                </form>
-
-                <!-- Register Form -->
-                <form id="form-register" onsubmit="handleRegister(event)" class="space-y-4 hidden">
-                    <div>
-                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Full Name</label>
-                        <input type="text" id="reg-name" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 text-white" placeholder="John Doe">
-                    </div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Email</label>
-                            <input type="email" id="reg-email" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 text-white" placeholder="john@company.com">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Phone</label>
-                            <input type="tel" id="reg-phone" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 text-white" placeholder="9876543210">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Password (Min 8 chars, Upper, Lower, Num, Special)</label>
-                        <input type="password" id="reg-pass" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 text-white" placeholder="••••••••">
-                    </div>
-                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-3 rounded-xl transition shadow-lg shadow-emerald-600/20">Submit Agent Registration</button>
-                </form>
-                
-                <div id="auth-error" class="mt-4 text-xs text-rose-400 text-center font-medium hidden"></div>
-            </div>
+      <!-- Sign In Form -->
+      <form id="signin-form" onsubmit="handleLogin(event)" class="space-y-4 text-sm">
+        <div>
+          <label class="block text-slate-400 text-xs mb-1">Email Address</label>
+          <input type="email" id="login-email" required class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-slate-100 focus:outline-none focus:border-indigo-500" placeholder="name@example.com">
         </div>
-
-        <!-- PENDING APPROVAL SCREEN -->
-        <div id="pending-view" class="flex-1 flex items-center justify-center p-4 bg-slate-950 hidden">
-            <div class="max-w-md w-full bg-slate-900 border border-slate-800 p-8 rounded-2xl text-center">
-                <div class="w-16 h-16 bg-amber-500/20 text-amber-400 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
-                    <i class="fa-solid fa-hourglass-half"></i>
-                </div>
-                <h2 class="text-xl font-bold text-white mb-2">Account Pending Approval</h2>
-                <p class="text-sm text-slate-400 mb-6">Your registration has been submitted successfully. A Super Admin must approve your account before you can access SNOR-CRM.</p>
-                <button onclick="logout()" class="text-sm text-indigo-400 hover:text-indigo-300 font-medium underline">Back to Login</button>
-            </div>
+        <div>
+          <label class="block text-slate-400 text-xs mb-1">Password</label>
+          <input type="password" id="login-password" required class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-slate-100 focus:outline-none focus:border-indigo-500" placeholder="••••••••">
         </div>
-
-        <!-- DASHBOARD VIEW (Main App) -->
-        <div id="dashboard-view" class="flex-1 flex flex-col hidden">
-            <!-- Top Navigation Bar -->
-            <header class="bg-slate-900 border-b border-slate-800 px-6 py-3 flex items-center justify-between sticky top-0 z-30">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-bold shadow">
-                        <i class="fa-solid fa-headset"></i>
-                    </div>
-                    <div>
-                        <span class="text-lg font-bold tracking-tight text-white">SNOR-CRM</span>
-                        <span class="text-xs px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-400 font-medium ml-2" id="nav-role-badge">Super Admin</span>
-                    </div>
-                </div>
-
-                <div class="flex items-center space-x-4">
-                    <div class="text-right hidden sm:block">
-                        <div class="text-sm font-semibold text-white" id="nav-user-name">User</div>
-                        <div class="text-xs text-slate-400" id="nav-user-email">email@domain.com</div>
-                    </div>
-                    <button onclick="logout()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-2 rounded-xl text-sm transition flex items-center space-x-2">
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                        <span>Logout</span>
-                    </button>
-                </div>
-            </header>
-
-            <div class="flex-1 flex flex-col md:flex-row">
-                <!-- Sidebar Navigation -->
-                <aside class="w-full md:w-64 bg-slate-950 border-r border-slate-800 p-4 flex flex-row md:flex-col justify-between space-x-2 md:space-x-0 md:space-y-1 overflow-x-auto">
-                    <div class="flex md:flex-col space-x-1 md:space-x-0 md:space-y-1 w-full">
-                        <button onclick="switchTab('overview')" id="sidebar-overview" class="sidebar-btn flex items-center space-x-3 w-full px-4 py-3 rounded-xl text-sm font-medium bg-indigo-600 text-white transition">
-                            <i class="fa-solid fa-chart-pie w-5"></i>
-                            <span class="hidden md:inline">Overview</span>
-                        </button>
-                        <button onclick="switchTab('tickets')" id="sidebar-tickets" class="sidebar-btn flex items-center space-x-3 w-full px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-900 hover:text-white transition">
-                            <i class="fa-solid fa-ticket w-5"></i>
-                            <span class="hidden md:inline">Tickets & SLA</span>
-                        </button>
-                        <button onclick="switchTab('calls')" id="sidebar-calls" class="sidebar-btn flex items-center space-x-3 w-full px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-900 hover:text-white transition">
-                            <i class="fa-solid fa-phone-volume w-5"></i>
-                            <span class="hidden md:inline">Call Logs & Points</span>
-                        </button>
-                        <button onclick="switchTab('leaderboard')" id="sidebar-leaderboard" class="sidebar-btn flex items-center space-x-3 w-full px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-900 hover:text-white transition">
-                            <i class="fa-solid fa-trophy w-5"></i>
-                            <span class="hidden md:inline">Leaderboard</span>
-                        </button>
-                        <button onclick="switchTab('amc')" id="sidebar-amc" class="sidebar-btn flex items-center space-x-3 w-full px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-900 hover:text-white transition">
-                            <i class="fa-solid fa-file-contract w-5"></i>
-                            <span class="hidden md:inline">AMC Tracker</span>
-                        </button>
-                        <button onclick="switchTab('contacts')" id="sidebar-contacts" class="sidebar-btn flex items-center space-x-3 w-full px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-900 hover:text-white transition">
-                            <i class="fa-solid fa-address-book w-5"></i>
-                            <span class="hidden md:inline">Contacts Directory</span>
-                        </button>
-                        <button onclick="switchTab('approvals')" id="sidebar-approvals" class="sidebar-btn hidden flex items-center space-x-3 w-full px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-900 hover:text-white transition relative">
-                            <i class="fa-solid fa-user-check w-5"></i>
-                            <span class="hidden md:inline">Agent Approvals</span>
-                            <span id="approval-badge" class="absolute right-3 bg-rose-500 text-white text-xs px-2 py-0.5 rounded-full hidden">0</span>
-                        </button>
-                    </div>
-                </aside>
-
-                <!-- Main Content Area -->
-                <main class="flex-1 p-6 overflow-y-auto bg-slate-900" id="main-content-area">
-                    <!-- Dynamic Tab Contents Injected via JS -->
-                </main>
-            </div>
+        <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 rounded-lg font-semibold text-white transition shadow-lg">Sign In</button>
+        <div class="text-center pt-2">
+          <button type="button" onclick="toggleAuthMode('register')" class="text-xs text-indigo-400 hover:underline">Don't have an account? Register new user</button>
         </div>
+      </form>
+
+      <!-- Register Form -->
+      <form id="register-form" onsubmit="handleRegister(event)" class="space-y-3 text-sm hidden">
+        <div>
+          <label class="block text-slate-400 text-xs mb-1">Full Name</label>
+          <input type="text" id="reg-name" required class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-slate-100 focus:outline-none focus:border-indigo-500" placeholder="John Doe">
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-slate-400 text-xs mb-1">Email Address</label>
+            <input type="email" id="reg-email" required class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-slate-100 focus:outline-none focus:border-indigo-500" placeholder="name@example.com">
+          </div>
+          <div>
+            <label class="block text-slate-400 text-xs mb-1">Phone Number</label>
+            <input type="text" id="reg-phone" required class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-slate-100 focus:outline-none focus:border-indigo-500" placeholder="9999999999">
+          </div>
+        </div>
+        <div>
+          <label class="block text-slate-400 text-xs mb-1">Password</label>
+          <input type="password" id="reg-password" required class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-slate-100 focus:outline-none focus:border-indigo-500" placeholder="••••••••">
+        </div>
+        <button type="submit" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 rounded-lg font-semibold text-white transition shadow-lg mt-2">Register Account</button>
+        <div class="text-center pt-2">
+          <button type="button" onclick="toggleAuthMode('signin')" class="text-xs text-indigo-400 hover:underline">Already have an account? Sign In</button>
+        </div>
+      </form>
     </div>
+  </div>
 
-    <!-- Application JavaScript Logic -->
-    <script>
-        // Secure Hashed Super Admin Credentials (Plain text passwords are completely hidden)
-        const SECURE_SUPER_ADMINS = [
-            { email: "jayeshbhargav6000@gmail.com", phone: "8857038165", name: "Jayesh Bhargav", passHash: "7b1348821a416bf9081e7d95d18d408f657a5849800049be173bf93033f20227" },
-            { email: "archita.s.parikh@gmail.com", phone: "9324504175", name: "Archita Parikh", passHash: "c00f7e4dfb1cd1e1bf1f8ed4cd3d63b064c5147be858f921ea1ea34cf69c5c7d" }
+  <div class="flex h-screen overflow-hidden">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-slate-950 border-r border-slate-800 flex flex-col">
+      <div class="p-5 flex items-center space-x-3 border-b border-slate-800">
+        <div class="bg-indigo-600 p-2 rounded-lg text-white font-bold"><i class="fa-solid fa-headset"></i></div>
+        <span class="text-xl font-extrabold tracking-wider bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">SNOR-CRM</span>
+      </div>
+      <nav class="flex-1 p-4 space-y-1">
+        <button onclick="switchTab('overview')" id="nav-overview" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl bg-indigo-600 text-white font-medium transition"><i class="fa-solid fa-chart-pie w-5"></i><span>Overview</span></button>
+        <button onclick="switchTab('tickets')" id="nav-tickets" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-900 hover:text-white font-medium transition"><i class="fa-solid fa-ticket w-5"></i><span>Support Tickets</span></button>
+        <button onclick="switchTab('mytasks')" id="nav-mytasks" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-900 hover:text-white font-medium transition"><i class="fa-solid fa-list-check w-5"></i><span>My Tasks</span></button>
+        <button onclick="switchTab('callcodes')" id="nav-callcodes" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-900 hover:text-white font-medium transition"><i class="fa-solid fa-code-branch w-5"></i><span>Master Call Codes</span></button>
+        <button onclick="switchTab('clients')" id="nav-clients" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-900 hover:text-white font-medium transition"><i class="fa-solid fa-address-book w-5"></i><span>Clients Directory</span></button>
+        <button onclick="switchTab('users')" id="nav-users" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-900 hover:text-white font-medium transition"><i class="fa-solid fa-users-gear w-5"></i><span>Users Directory</span></button>
+      </nav>
+      
+      <!-- Super Admin Only Workflow Nav Option -->
+      <div id="workflow-nav-container" class="px-4 pb-2 hidden">
+        <button onclick="switchTab('workflow')" id="nav-workflow" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-900 hover:text-white font-medium transition border border-indigo-500/30 bg-indigo-500/5">
+          <i class="fa-solid fa-diagram-project w-5 text-indigo-400"></i>
+          <span>Workflow / Monitor</span>
+        </button>
+      </div>
+
+      <!-- User Profile & Log Out Footer -->
+      <div class="p-4 border-t border-slate-800 space-y-3">
+        <div class="flex items-center justify-between">
+          <div>
+            <p id="current-user-name" class="text-sm font-bold text-slate-200">Jayesh Bhargav</p>
+            <p id="current-user-role" class="text-xs text-indigo-400">Super Admin</p>
+          </div>
+          <button onclick="loadCRMData()" class="text-slate-400 hover:text-white" title="Sync Data"><i class="fa-solid fa-sync"></i></button>
+        </div>
+        <button onclick="logout()" class="w-full flex items-center justify-center space-x-2 py-2 px-3 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 text-xs font-semibold transition">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          <span>Log Out</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col overflow-y-auto">
+      <header class="bg-slate-900 border-b border-slate-800 h-16 flex items-center justify-between px-8">
+        <h1 id="page-title" class="text-xl font-bold">Dashboard Overview</h1>
+        <button onclick="openNewTicketModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg font-medium text-sm transition flex items-center space-x-2">
+          <i class="fa-solid fa-plus"></i><span>Create Ticket</span>
+        </button>
+      </header>
+
+      <div class="p-8">
+        <!-- Overview Tab -->
+        <section id="tab-overview" class="space-y-6">
+          <div class="grid grid-cols-4 gap-6">
+            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+              <p class="text-slate-400 text-sm">Total Tickets</p>
+              <h3 id="stat-total-tickets" class="text-3xl font-bold mt-2">0</h3>
+            </div>
+            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+              <p class="text-slate-400 text-sm">Total Open Tickets</p>
+              <h3 id="stat-open-tickets" class="text-3xl font-bold mt-2 text-amber-400">0</h3>
+            </div>
+            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+              <p class="text-slate-400 text-sm">Fresh Tickets (Today)</p>
+              <h3 id="stat-fresh-tickets" class="text-3xl font-bold mt-2 text-indigo-400">0</h3>
+            </div>
+            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+              <p class="text-slate-400 text-sm">Closed Today</p>
+              <h3 id="stat-closed-today" class="text-3xl font-bold mt-2 text-emerald-400">0</h3>
+            </div>
+          </div>
+          <div class="grid grid-cols-4 gap-6">
+            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+              <p class="text-slate-400 text-sm">Payment: Done</p>
+              <h3 id="stat-payment-done" class="text-3xl font-bold mt-2 text-emerald-400">0</h3>
+            </div>
+            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+              <p class="text-slate-400 text-sm">Payment Awaited</p>
+              <h3 id="stat-payment-awaited" class="text-3xl font-bold mt-2 text-rose-400">0</h3>
+            </div>
+            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+              <p class="text-slate-400 text-sm">Medium Priority Tickets</p>
+              <h3 id="stat-med-priority" class="text-3xl font-bold mt-2 text-blue-400">0</h3>
+            </div>
+            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+              <p class="text-slate-400 text-sm">High Priority Tickets</p>
+              <h3 id="stat-high-priority" class="text-3xl font-bold mt-2 text-rose-400">0</h3>
+            </div>
+          </div>
+        </section>
+
+        <!-- My Tasks Tab -->
+        <section id="tab-mytasks" class="hidden space-y-6">
+          <div class="flex justify-between items-center">
+            <div>
+              <h2 class="text-lg font-bold">My Assigned Tasks & Tickets</h2>
+              <p class="text-xs text-slate-400 mt-0.5">Tickets assigned to you and administrative tasks created by Super Admin.</p>
+            </div>
+          </div>
+          <div class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
+            <table class="w-full text-left border-collapse text-sm">
+              <thead>
+                <tr class="bg-slate-900 border-b border-slate-700 text-slate-400 text-xs uppercase">
+                  <th class="p-4">Reference / ID</th>
+                  <th class="p-4">Type</th>
+                  <th class="p-4">Assigned By / Client</th>
+                  <th class="p-4">Description / Details</th>
+                  <th class="p-4">Priority</th>
+                  <th class="p-4">Status</th>
+                </tr>
+              </thead>
+              <tbody id="my-tasks-table-body" class="divide-y divide-slate-700"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Workflow / Monitor Tab (Super Admin Only) -->
+        <section id="tab-workflow" class="hidden space-y-6">
+          <div class="flex justify-between items-center">
+            <div>
+              <h2 class="text-lg font-bold">Workflow & Agent Monitoring</h2>
+              <p class="text-xs text-slate-400 mt-0.5">Monitor what every agent is currently working on and assign direct tasks.</p>
+            </div>
+            <button onclick="openAssignTaskModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg font-medium text-sm transition flex items-center space-x-2">
+              <i class="fa-solid fa-plus"></i><span>Assign New Task</span>
+            </button>
+          </div>
+          <div class="grid grid-cols-2 gap-6">
+            <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 space-y-4">
+              <h3 class="font-bold text-indigo-400 text-sm uppercase tracking-wider">Active Agent Workload</h3>
+              <div id="workflow-agent-list" class="space-y-3"></div>
+            </div>
+            <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 space-y-4">
+              <h3 class="font-bold text-indigo-400 text-sm uppercase tracking-wider">All Admin-Assigned Tasks</h3>
+              <div id="workflow-admin-tasks" class="space-y-3 overflow-y-auto max-h-96"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Master Call Codes Tab -->
+        <section id="tab-callcodes" class="hidden space-y-6">
+          <div class="flex justify-between items-center">
+            <h2 class="text-lg font-bold">Master Call Codes & Points Mapping</h2>
+            <input type="text" id="code-search" placeholder="Search call codes..." onkeyup="filterCallCodes()" class="bg-slate-800 border border-slate-700 px-4 py-2 rounded-lg text-sm w-72 focus:outline-none focus:border-indigo-500">
+          </div>
+          <div class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-slate-900 border-b border-slate-700 text-slate-400 text-xs uppercase">
+                  <th class="p-4">Call Code</th>
+                  <th class="p-4">Description</th>
+                  <th class="p-4">Assigned Points</th>
+                </tr>
+              </thead>
+              <tbody id="call-codes-table-body" class="divide-y divide-slate-700 text-sm"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Tickets Tab -->
+        <section id="tab-tickets" class="hidden space-y-6">
+          <div class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
+            <table class="w-full text-left border-collapse text-sm">
+              <thead>
+                <tr class="bg-slate-900 border-b border-slate-700 text-slate-400 text-xs uppercase">
+                  <th class="p-3">Ticket ID</th>
+                  <th class="p-3">Date</th>
+                  <th class="p-3">Company Name</th>
+                  <th class="p-3">Customer / SPOC</th>
+                  <th class="p-3">Designation</th>
+                  <th class="p-3">Call Reason</th>
+                  <th class="p-3">Call Code</th>
+                  <th class="p-3">Points</th>
+                  <th class="p-3">Agent</th>
+                  <th class="p-3">Priority</th>
+                  <th class="p-3">Status</th>
+                  <th class="p-3">Aging Indicator</th>
+                </tr>
+              </thead>
+              <tbody id="tickets-table-body" class="divide-y divide-slate-700"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Clients Directory Tab -->
+        <section id="tab-clients" class="hidden space-y-6">
+          <div class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
+            <table class="w-full text-left border-collapse text-sm">
+              <thead>
+                <tr class="bg-slate-900 border-b border-slate-700 text-slate-400 text-xs uppercase">
+                  <th class="p-4">Company</th>
+                  <th class="p-4">SPOC Name</th>
+                  <th class="p-4">Phone</th>
+                  <th class="p-4">Email</th>
+                  <th class="p-4">Designation</th>
+                  <th class="p-4">Products / Services</th>
+                </tr>
+              </thead>
+              <tbody id="clients-table-body" class="divide-y divide-slate-700"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Users Directory Tab -->
+        <section id="tab-users" class="hidden space-y-6">
+          <div class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
+            <table class="w-full text-left border-collapse text-sm">
+              <thead>
+                <tr class="bg-slate-900 border-b border-slate-700 text-slate-400 text-xs uppercase">
+                  <th class="p-4">Name</th>
+                  <th class="p-4">Email</th>
+                  <th class="p-4">Phone</th>
+                  <th class="p-4">Role (Editable)</th>
+                  <th class="p-4">Status / Approval (Editable)</th>
+                </tr>
+              </thead>
+              <tbody id="users-table-body" class="divide-y divide-slate-700"></tbody>
+            </table>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Assign Task Modal (Super Admin) -->
+  <div id="assign-task-modal" class="fixed inset-0 bg-black/70 flex items-center justify-center hidden z-50">
+    <div class="bg-slate-800 border border-slate-700 w-full max-w-lg rounded-2xl p-6 space-y-4">
+      <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+        <h3 class="text-lg font-bold">Assign Direct Task to Agent</h3>
+        <button onclick="closeAssignTaskModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+      <form onsubmit="submitAdminTask(event)" class="space-y-4 text-sm">
+        <div>
+          <label class="block text-slate-400 mb-1">Select Agent</label>
+          <select id="task-form-agent" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100"></select>
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">Task Title / Subject</label>
+          <input type="text" id="task-form-title" required placeholder="e.g. Follow up on client payment" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100">
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">Task Details & Instructions</label>
+          <textarea id="task-form-desc" rows="3" required placeholder="Detailed task instruction..." class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100"></textarea>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-slate-400 mb-1">Priority</label>
+            <select id="task-form-priority" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100">
+              <option value="Low">Low</option>
+              <option value="Medium" selected>Medium</option>
+              <option value="High">High</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Due Date</label>
+            <input type="date" id="task-form-duedate" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100">
+          </div>
+        </div>
+        <div class="flex justify-end space-x-3 pt-4 border-t border-slate-700">
+          <button type="button" onclick="closeAssignTaskModal()" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg font-medium">Cancel</button>
+          <button type="submit" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg font-medium text-white">Assign Task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Ticket Detail & Follow-Up Drawer Modal -->
+  <div id="ticket-drawer" class="fixed inset-0 bg-black/70 flex justify-end hidden z-50">
+    <div class="bg-slate-900 border-l border-slate-800 w-full max-w-5xl h-full flex flex-col shadow-2xl">
+      <div class="p-6 bg-slate-950 border-b border-slate-800 flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+          <span id="drawer-ticket-id" class="font-mono text-indigo-400 font-bold text-lg">TICK-1001</span>
+          <span id="drawer-ticket-date" class="text-xs text-slate-400"></span>
+        </div>
+        <button onclick="closeTicketDrawer()" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800"><i class="fa-solid fa-xmark text-xl"></i></button>
+      </div>
+
+      <div class="flex-1 overflow-y-auto grid grid-cols-12 gap-6 p-6">
+        <div class="col-span-4 space-y-3 text-sm bg-slate-800/50 p-5 rounded-xl border border-slate-800">
+          <h3 class="font-bold text-indigo-400 uppercase text-xs tracking-wider border-b border-slate-700 pb-2">Client & Issue Info</h3>
+          <div>
+            <label class="text-slate-400 text-xs">Company Name</label>
+            <p id="drawer-company" class="font-semibold text-slate-200"></p>
+          </div>
+          <div>
+            <label class="text-slate-400 text-xs">Customer / SPOC</label>
+            <p id="drawer-name" class="font-semibold text-slate-200"></p>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="text-slate-400 text-xs">Phone</label>
+              <p id="drawer-contact" class="text-slate-300"></p>
+            </div>
+            <div>
+              <label class="text-slate-400 text-xs">Email</label>
+              <p id="drawer-email" class="text-slate-300 truncate"></p>
+            </div>
+          </div>
+          <div>
+            <label class="text-slate-400 text-xs">Designation</label>
+            <p id="drawer-designation" class="text-slate-300"></p>
+          </div>
+          <div class="border-t border-slate-700 pt-3 space-y-2">
+            <div>
+              <label class="text-slate-400 text-xs">Product / Services</label>
+              <select id="drawer-product" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-100 text-xs mt-1"></select>
+            </div>
+            <div>
+              <label class="text-slate-400 text-xs">Call Code & Points</label>
+              <p class="text-emerald-400 font-bold mt-1"><span id="drawer-code"></span> (<span id="drawer-points"></span> pts)</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-span-4 space-y-3 text-sm bg-slate-800/50 p-5 rounded-xl border border-slate-800 flex flex-col justify-between">
+          <div class="space-y-3">
+            <h3 class="font-bold text-indigo-400 uppercase text-xs tracking-wider border-b border-slate-700 pb-2">Follow-up & Actions</h3>
+            <div>
+              <label class="block text-slate-400 text-xs mb-1">Call Reason</label>
+              <select id="drawer-call-reason" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-100 text-xs"></select>
+            </div>
+            <div>
+              <label class="block text-slate-400 text-xs mb-1">Status</label>
+              <select id="drawer-status" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-100 text-xs"></select>
+            </div>
+            <div>
+              <label class="block text-slate-400 text-xs mb-1">Payment Status</label>
+              <select id="drawer-payment-status" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-100 text-xs"></select>
+            </div>
+            <div>
+              <label class="block text-slate-400 text-xs mb-1">Priority</label>
+              <select id="drawer-priority" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-100 text-xs">
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-slate-400 text-xs mb-1">Assign Agent / Reassign</label>
+              <select id="drawer-agent" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-100 text-xs"></select>
+            </div>
+            <div>
+              <label class="block text-slate-400 text-xs mb-1">Call Description</label>
+              <select id="drawer-call-description" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-100 text-xs"></select>
+            </div>
+            <div>
+              <label class="block text-slate-400 text-xs mb-1">Follow-up Remark (Column O)</label>
+              <input type="text" id="drawer-followup-remark" placeholder="e.g. Client requested callback tomorrow" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-100 text-xs">
+            </div>
+          </div>
+          <button onclick="saveTicketUpdate()" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 rounded-lg font-semibold text-white text-xs transition shadow-lg">Save Changes & Log Activity</button>
+        </div>
+
+        <div class="col-span-4 space-y-4 text-sm bg-slate-800/50 p-5 rounded-xl border border-slate-800 flex flex-col">
+          <h3 class="font-bold text-indigo-400 uppercase text-xs tracking-wider border-b border-slate-700 pb-2">Activity & Timeline</h3>
+          <div id="drawer-timeline" class="flex-1 overflow-y-auto space-y-3 pr-2"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- New Ticket Modal -->
+  <div id="ticket-modal" class="fixed inset-0 bg-black/70 flex items-center justify-center hidden z-50">
+    <div class="bg-slate-800 border border-slate-700 w-full max-w-2xl rounded-2xl p-6 space-y-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+        <h3 class="text-lg font-bold">Create New Support Ticket</h3>
+        <button onclick="closeNewTicketModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+      <form id="ticket-form" onsubmit="submitTicket(event)" class="space-y-4 text-sm">
+        <div class="grid grid-cols-3 gap-4">
+          <div>
+            <label class="block text-slate-400 mb-1">Ticket ID</label>
+            <input type="text" id="form-ticket-id" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100" value="TICK-1002">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Date</label>
+            <input type="date" id="form-date" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Company Name</label>
+            <input type="text" id="form-company" required placeholder="e.g. Acme Corp" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100">
+          </div>
+        </div>
+        <div class="grid grid-cols-3 gap-4">
+          <div>
+            <label class="block text-slate-400 mb-1">Customer Name</label>
+            <input type="text" id="form-name" required placeholder="Full Name" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Email Address</label>
+            <input type="email" id="form-email" placeholder="name@example.com" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Designation</label>
+            <input type="text" id="form-designation" placeholder="e.g. Manager" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-slate-400 mb-1">Contact Phone</label>
+            <input type="text" id="form-contact" required placeholder="9999999999" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Call Reason</label>
+            <select id="form-call-reason" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100"></select>
+          </div>
+        </div>
+        <div class="grid grid-cols-3 gap-4">
+          <div>
+            <label class="block text-slate-400 mb-1">Call Code</label>
+            <select id="form-call-code" onchange="updateCallPoints()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100"></select>
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Assigned Points</label>
+            <input type="text" id="form-call-points" readonly class="w-full bg-slate-900/50 border border-slate-700 rounded-lg p-2.5 text-indigo-400 font-bold">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Assign Agent</label>
+            <select id="form-agent" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100"></select>
+          </div>
+        </div>
+        <div class="grid grid-cols-3 gap-4">
+          <div>
+            <label class="block text-slate-400 mb-1">Priority</label>
+            <select id="form-priority" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100">
+              <option value="Low">Low</option>
+              <option value="Medium" selected>Medium</option>
+              <option value="High">High</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Status</label>
+            <select id="form-status" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100"></select>
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Payment Status</label>
+            <select id="form-payment-status" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100"></select>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-slate-400 mb-1">Product / Services</label>
+            <select id="form-product" onchange="checkNewProduct(this)" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100"></select>
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Call Description</label>
+            <select id="form-call-description" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100"></select>
+          </div>
+        </div>
+        <div class="flex justify-end space-x-3 pt-4 border-t border-slate-700">
+          <button type="button" onclick="closeNewTicketModal()" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg font-medium">Cancel</button>
+          <button type="submit" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg font-medium text-white">Save Ticket</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyLGmD3kAxijsZMPZJ6_CWWBTf6namdl4zZm1ggeqKJbvZuBPTpY7fHQhYUotD4zfNR/exec";
+    
+    let CRM_DATA = {
+      callCodes: [],
+      dropdowns: { callReasons: [], statuses: [], paymentStatuses: [], callDescriptions: [] },
+      products: [],
+      users: [],
+      clients: [],
+      tickets: [],
+      adminTasks: []
+    };
+
+    let currentUser = { name: "Jayesh Bhargav", role: "Super Admin" };
+    let activeTicketId = null;
+
+    async function loadCRMData() {
+      try {
+        const response = await fetch(`${WEB_APP_URL}?action=getData`);
+        CRM_DATA = await response.json();
+        buildClientsFromTickets();
+        renderDashboard();
+      } catch (err) {
+        console.error("Error fetching CRM data:", err);
+      }
+    }
+
+    function buildClientsFromTickets() {
+      const clientMap = new Map();
+      CRM_DATA.tickets.forEach(t => {
+        const company = t["Company"] || "Unknown Company";
+        if (!clientMap.has(company)) {
+          clientMap.set(company, {
+            "Company": company,
+            "SPOC Name": t["Name"] || "",
+            "SPOC Phone": t["Contact"] || "",
+            "SPOC Email": t["Email"] || "",
+            "SPOC Designation": t["Designation"] || "",
+            "Product / Services": t["Products / Services (multi Checkbox with Option to add products to the list)"] || t["Product / Services"] || ""
+          });
+        }
+      });
+      if (!CRM_DATA.clients || CRM_DATA.clients.length === 0) {
+        CRM_DATA.clients = Array.from(clientMap.values());
+      }
+    }
+
+    function renderDashboard() {
+      const todayStr = new Date().toISOString().split('T')[0];
+
+      const totalTickets = CRM_DATA.tickets.length;
+      const openTickets = CRM_DATA.tickets.filter(t => {
+        const s = (t["Status"] || "").toLowerCase();
+        return s.includes("open") || s.includes("pending") || s.includes("progress");
+      }).length;
+
+      const freshTickets = CRM_DATA.tickets.filter(t => (t["Date"] || "").startsWith(todayStr)).length;
+      
+      const closedToday = CRM_DATA.tickets.filter(t => {
+        const s = (t["Status"] || "").toLowerCase();
+        const isClosed = s.includes("closed") || s.includes("resolved") || s.includes("done");
+        const timestamp = t["Remarks (with time & date)"] || t["Timestamp"] || t["Date"] || "";
+        return isClosed && (timestamp.includes(todayStr.split('-').reverse().join('-')) || timestamp.startsWith(todayStr));
+      }).length;
+
+      const paymentDone = CRM_DATA.tickets.filter(t => (t["Payment Status"] || "").toLowerCase() === "done").length;
+      const paymentAwaited = CRM_DATA.tickets.filter(t => {
+        const p = (t["Payment Status"] || "").toLowerCase();
+        return p !== "done" && p !== "not applicable";
+      }).length;
+
+      const mediumPriority = CRM_DATA.tickets.filter(t => (t["Priority"] || "").toLowerCase() === "medium").length;
+      const highPriority = CRM_DATA.tickets.filter(t => (t["Priority"] || "").toLowerCase() === "high").length;
+
+      document.getElementById("stat-total-tickets").innerText = totalTickets;
+      document.getElementById("stat-open-tickets").innerText = openTickets;
+      document.getElementById("stat-fresh-tickets").innerText = freshTickets;
+      document.getElementById("stat-closed-today").innerText = closedToday;
+      document.getElementById("stat-payment-done").innerText = paymentDone;
+      document.getElementById("stat-payment-awaited").innerText = paymentAwaited;
+      document.getElementById("stat-med-priority").innerText = mediumPriority;
+      document.getElementById("stat-high-priority").innerText = highPriority;
+
+      renderMyTasks();
+      renderWorkflowMonitor();
+
+      document.getElementById("call-codes-table-body").innerHTML = CRM_DATA.callCodes.map(c => `
+        <tr class="hover:bg-slate-750">
+          <td class="p-4 font-mono text-indigo-400 font-semibold">${c["Call Code"] || ""}</td>
+          <td class="p-4">${c["Description"] || ""}</td>
+          <td class="p-4 text-emerald-400 font-bold">+${c["Points"] || 0} pts</td>
+        </tr>
+      `).join("");
+
+      document.getElementById("clients-table-body").innerHTML = CRM_DATA.clients.length ? CRM_DATA.clients.map(cl => `
+        <tr class="hover:bg-slate-750">
+          <td class="p-4 font-semibold text-slate-100">${cl["Company"] || ""}</td>
+          <td class="p-4">${cl["SPOC Name"] || ""}</td>
+          <td class="p-4">${cl["SPOC Phone"] || ""}</td>
+          <td class="p-4 text-slate-400">${cl["SPOC Email"] || ""}</td>
+          <td class="p-4 text-indigo-300">${cl["SPOC Designation"] || ""}</td>
+          <td class="p-4">${cl["Product / Services"] || ""}</td>
+        </tr>
+      `).join("") : `<tr><td colspan="6" class="p-6 text-center text-slate-500">No clients found.</td></tr>`;
+
+      document.getElementById("users-table-body").innerHTML = CRM_DATA.users.map((u, idx) => {
+        const userName = (u["Name"] || "").trim().toLowerCase();
+        const isSuperAdminUser = userName.includes("jayesh") || userName.includes("archita");
+
+        let roleOptionsHTML = "";
+        if (isSuperAdminUser) {
+          roleOptionsHTML = `<option value="Super Admin" selected>Super Admin</option>`;
+        } else {
+          roleOptionsHTML = `
+            <option value="Admin" ${u["Role"] === "Admin" ? "selected" : ""}>Admin</option>
+            <option value="Agent" ${u["Role"] === "Agent" || !u["Role"] ? "selected" : ""}>Agent</option>
+          `;
+        }
+
+        const statusVal = u["Status"] || "Pending";
+        const statusOptionsHTML = `
+          <option value="Approved" ${statusVal === "Approved" ? "selected" : ""}>Approved</option>
+          <option value="Pending" ${statusVal === "Pending" ? "selected" : ""}>Pending</option>
+          <option value="Rejected" ${statusVal === "Rejected" ? "selected" : ""}>Rejected</option>
+        `;
+
+        return `
+          <tr class="hover:bg-slate-750">
+            <td class="p-4 font-semibold">${u["Name"] || ""}</td>
+            <td class="p-4 text-slate-400">${u["Email"] || ""}</td>
+            <td class="p-4">${u["Phone"] || ""}</td>
+            <td class="p-4">
+              <select onchange="updateUserRole(${idx}, this.value)" class="bg-slate-900 border border-slate-700 rounded px-2 py-1 text-indigo-300 text-xs focus:outline-none focus:border-indigo-500">
+                ${roleOptionsHTML}
+              </select>
+            </td>
+            <td class="p-4">
+              <select onchange="updateUserStatus(${idx}, this.value)" class="bg-slate-900 border border-slate-700 rounded px-2 py-1 text-xs focus:outline-none focus:border-indigo-500 ${statusVal === 'Approved' ? 'text-emerald-400' : 'text-amber-400'}">
+                ${statusOptionsHTML}
+              </select>
+            </td>
+          </tr>
+        `;
+      }).join("");
+
+      document.getElementById("tickets-table-body").innerHTML = CRM_DATA.tickets.length ? CRM_DATA.tickets.map(t => {
+        return `
+          <tr class="hover:bg-slate-750/60 cursor-pointer transition" onclick="openTicketDrawer('${t["Ticket ID"]}')">
+            <td class="p-3 font-mono text-indigo-400 font-bold hover:underline">${t["Ticket ID"] || ""}</td>
+            <td class="p-3">${t["Date"] || ""}</td>
+            <td class="p-3 font-bold text-slate-100">${t["Company"] || ""}</td>
+            <td class="p-3">${t["Name"] || ""}</td>
+            <td class="p-3 text-indigo-300">${t["Designation"] || ""}</td>
+            <td class="p-3">${t["Call Reason"] || ""}</td>
+            <td class="p-3 font-mono">${t["Call Code"] || ""}</td>
+            <td class="p-3 text-emerald-400 font-bold">+${t["Call Points"] || 0}</td>
+            <td class="p-3 text-slate-300">${t["Agent Assigned"] || ""}</td>
+            <td class="p-3"><span class="px-2 py-0.5 rounded text-xs font-semibold ${t["Priority"] === 'High' ? 'bg-rose-500/10 text-rose-400' : 'bg-blue-500/10 text-blue-400'}">${t["Priority"] || "Medium"}</span></td>
+            <td class="p-3">${t["Status"] || ""}</td>
+            <td class="p-3"><span class="px-2.5 py-1 rounded text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Active</span></td>
+          </tr>
+        `;
+      }).join("") : `<tr><td colspan="12" class="p-6 text-center text-slate-500">No tickets logged yet.</td></tr>`;
+
+      populateGlobalDropdowns();
+    }
+
+    async function updateUserRole(index, newRole) {
+      const user = CRM_DATA.users[index];
+      user["Role"] = newRole;
+      
+      await fetch(WEB_APP_URL, {
+        method: "POST",
+        body: JSON.stringify({ 
+          sheetName: "Users_Directory", 
+          action: "updateUser", 
+          email: user["Email"], 
+          fields: { "Role": newRole } 
+        })
+      });
+      alert(`Role for ${user["Name"]} updated to ${newRole}!`);
+      loadCRMData();
+    }
+
+    async function updateUserStatus(index, newStatus) {
+      const user = CRM_DATA.users[index];
+      user["Status"] = newStatus;
+      
+      await fetch(WEB_APP_URL, {
+        method: "POST",
+        body: JSON.stringify({ 
+          sheetName: "Users_Directory", 
+          action: "updateUser", 
+          email: user["Email"], 
+          fields: { "Status": newStatus } 
+        })
+      });
+      alert(`Status for ${user["Name"]} updated to ${newStatus}!`);
+      loadCRMData();
+    }
+
+    function renderMyTasks() {
+      const myTickets = CRM_DATA.tickets.filter(t => (t["Agent Assigned"] || "").toLowerCase() === currentUser.name.toLowerCase());
+      const myAdminTasks = (CRM_DATA.adminTasks || []).filter(task => task.assignedTo.toLowerCase() === currentUser.name.toLowerCase());
+
+      let html = "";
+      myTickets.forEach(t => {
+        html += `
+          <tr class="hover:bg-slate-750/60 cursor-pointer transition" onclick="openTicketDrawer('${t["Ticket ID"]}')">
+            <td class="p-4 font-mono text-indigo-400 font-bold">${t["Ticket ID"]}</td>
+            <td class="p-4"><span class="px-2.5 py-0.5 rounded text-xs bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">Support Ticket</span></td>
+            <td class="p-4 font-semibold text-slate-200">${t["Company"]} (${t["Name"]})</td>
+            <td class="p-4 text-slate-300">${t["Call Reason"]} - ${t["Call Description"] || 'No description'}</td>
+            <td class="p-4"><span class="px-2 py-0.5 rounded text-xs font-semibold ${t["Priority"] === 'High' ? 'bg-rose-500/10 text-rose-400' : 'bg-blue-500/10 text-blue-400'}">${t["Priority"] || "Medium"}</span></td>
+            <td class="p-4 text-amber-400 font-medium">${t["Status"]}</td>
+          </tr>
+        `;
+      });
+
+      myAdminTasks.forEach(task => {
+        html += `
+          <tr class="hover:bg-slate-750/65">
+            <td class="p-4 font-mono text-purple-400 font-bold">${task.id}</td>
+            <td class="p-4"><span class="px-2.5 py-0.5 rounded text-xs bg-purple-500/10 text-purple-400 border border-purple-500/20">Admin Task</span></td>
+            <td class="p-4 font-semibold text-slate-200">Super Admin Assignment</td>
+            <td class="p-4 text-slate-300"><b>${task.title}</b>: ${task.description} (Due: ${task.dueDate})</td>
+            <td class="p-4"><span class="px-2 py-0.5 rounded text-xs font-semibold ${task.priority === 'High' ? 'bg-rose-500/10 text-rose-400' : 'bg-blue-500/10 text-blue-400'}">${task.priority}</span></td>
+            <td class="p-4 text-emerald-400 font-medium">Assigned</td>
+          </tr>
+        `;
+      });
+
+      if (!html) {
+        html = `<tr><td colspan="6" class="p-6 text-center text-slate-500">No tasks or tickets currently assigned to you.</td></tr>`;
+      }
+
+      document.getElementById("my-tasks-table-body").innerHTML = html;
+    }
+
+    function renderWorkflowMonitor() {
+      if (currentUser.role !== "Super Admin") return;
+
+      const agentListContainer = document.getElementById("workflow-agent-list");
+      agentListContainer.innerHTML = (CRM_DATA.users || []).map(u => {
+        const assignedTicketsCount = CRM_DATA.tickets.filter(t => (t["Agent Assigned"] || "").toLowerCase() === u["Name"].toLowerCase()).length;
+        const assignedTasksCount = (CRM_DATA.adminTasks || []).filter(task => task.assignedTo.toLowerCase() === u["Name"].toLowerCase()).length;
+        return `
+          <div class="bg-slate-900 p-3 rounded-lg border border-slate-700 flex justify-between items-center text-xs">
+            <div>
+              <p class="font-bold text-slate-200">${u["Name"]}</p>
+              <p class="text-indigo-400">${u["Role"]}</p>
+            </div>
+            <div class="text-right space-x-2">
+              <span class="px-2 py-1 rounded bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">${assignedTicketsCount} Tickets</span>
+              <span class="px-2 py-1 rounded bg-purple-500/10 text-purple-300 border border-purple-500/20">${assignedTasksCount} Admin Tasks</span>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      const adminTasksContainer = document.getElementById("workflow-admin-tasks");
+      adminTasksContainer.innerHTML = (CRM_DATA.adminTasks || []).length ? (CRM_DATA.adminTasks || []).map(task => `
+        <div class="bg-slate-900 p-3 rounded-lg border border-slate-700 space-y-1 text-xs">
+          <div class="flex justify-between items-center">
+            <span class="font-bold text-indigo-300">${task.title}</span>
+            <span class="text-slate-400">Due: ${task.dueDate}</span>
+          </div>
+          <p class="text-slate-300">${task.description}</p>
+          <p class="text-xs text-emerald-400">Assigned To: <b>${task.assignedTo}</b> (${task.priority} Priority)</p>
+        </div>
+      `).join("") : `<p class="text-slate-500 text-xs text-center py-4">No direct tasks assigned yet.</p>`;
+    }
+
+    function getAvailableCallDescriptions() {
+      return CRM_DATA.dropdowns.callDescriptions || CRM_DATA.dropdowns.callDescription || CRM_DATA.dropdowns.descriptions || ["General Inquiry", "Support", "Billing", "Follow-up", "Feedback"];
+    }
+
+    function populateGlobalDropdowns() {
+      const callReasonHTML = (CRM_DATA.dropdowns.callReasons || []).map(r => `<option value="${r}">${r}</option>`).join("");
+      const statusHTML = (CRM_DATA.dropdowns.statuses || []).map(s => `<option value="${s}">${s}</option>`).join("");
+      const paymentStatusHTML = (CRM_DATA.dropdowns.paymentStatuses || []).map(p => `<option value="${p}">${p}</option>`).join("");
+      
+      const descriptions = getAvailableCallDescriptions();
+      const callDescHTML = descriptions.map(d => `<option value="${d}">${d}</option>`).join("");
+      
+      const callCodeHTML = (CRM_DATA.callCodes || []).map(c => `<option value="${c["Call Code"]}" data-points="${c["Points"]}">${c["Call Code"]} - ${c["Description"]}</option>`).join("");
+      const agentHTML = (CRM_DATA.users || []).map(u => `<option value="${u["Name"]}">${u["Name"]} (${u["Role"]})</option>`).join("");
+      
+      let productOptions = (CRM_DATA.products || []).map(p => `<option value="${p}">${p}</option>`).join("");
+      productOptions += `<option value="ADD_NEW" class="text-indigo-400 font-bold">+ Add New Product...</option>`;
+
+      document.getElementById("form-call-reason").innerHTML = callReasonHTML;
+      document.getElementById("form-status").innerHTML = statusHTML;
+      document.getElementById("form-payment-status").innerHTML = paymentStatusHTML;
+      document.getElementById("form-call-description").innerHTML = callDescHTML;
+      document.getElementById("form-call-code").innerHTML = callCodeHTML;
+      document.getElementById("form-agent").innerHTML = agentHTML;
+      document.getElementById("form-product").innerHTML = productOptions;
+
+      const taskAgentSelect = document.getElementById("task-form-agent");
+      if (taskAgentSelect) taskAgentSelect.innerHTML = agentHTML;
+
+      updateCallPoints();
+    }
+
+    function openTicketDrawer(ticketId) {
+      activeTicketId = ticketId;
+      const ticket = CRM_DATA.tickets.find(t => t["Ticket ID"] === ticketId);
+      if (!ticket) return;
+
+      document.getElementById("drawer-ticket-id").innerText = ticket["Ticket ID"];
+      document.getElementById("drawer-ticket-date").innerText = `Opened: ${ticket["Date"] || ""}`;
+      document.getElementById("drawer-company").innerText = ticket["Company"] || "";
+      document.getElementById("drawer-name").innerText = ticket["Name"] || "";
+      document.getElementById("drawer-contact").innerText = ticket["Contact"] || "";
+      document.getElementById("drawer-email").innerText = ticket["Email"] || "N/A";
+      document.getElementById("drawer-designation").innerText = ticket["Designation"] || "N/A";
+      document.getElementById("drawer-code").innerText = ticket["Call Code"] || "";
+      document.getElementById("drawer-points").innerText = ticket["Call Points"] || "0";
+      document.getElementById("drawer-followup-remark").value = "";
+
+      // Populate Drawer Product Dropdown
+      let prodOpts = (CRM_DATA.products || []).map(p => `<option value="${p}" ${ticket["Product / Services"] === p || ticket["Products / Services (multi Checkbox with Option to add products to the list)"] === p ? 'selected' : ''}>${p}</option>`).join("");
+      prodOpts += `<option value="ADD_NEW" class="text-indigo-400 font-bold">+ Add New Product...</option>`;
+      const drawerProductElem = document.getElementById("drawer-product");
+      drawerProductElem.innerHTML = prodOpts;
+      drawerProductElem.onchange = function() { checkNewProduct(this); };
+
+      document.getElementById("drawer-call-reason").innerHTML = (CRM_DATA.dropdowns.callReasons || []).map(r => `<option value="${r}" ${ticket["Call Reason"] === r ? 'selected' : ''}>${r}</option>`).join("");
+      document.getElementById("drawer-status").innerHTML = (CRM_DATA.dropdowns.statuses || []).map(s => `<option value="${s}" ${ticket["Status"] === s ? 'selected' : ''}>${s}</option>`).join("");
+      document.getElementById("drawer-payment-status").innerHTML = (CRM_DATA.dropdowns.paymentStatuses || []).map(p => `<option value="${p}" ${ticket["Payment Status"] === p ? 'selected' : ''}>${p}</option>`).join("");
+      
+      const descriptions = getAvailableCallDescriptions();
+      const currentCallDesc = ticket["Call Description"] || "";
+      document.getElementById("drawer-call-description").innerHTML = descriptions.map(d => `<option value="${d}" ${currentCallDesc === d ? 'selected' : ''}>${d}</option>`).join("");
+
+      document.getElementById("drawer-priority").value = ticket["Priority"] || "Medium";
+      document.getElementById("drawer-agent").innerHTML = (CRM_DATA.users || []).map(u => `<option value="${u["Name"]}" ${ticket["Agent Assigned"] === u["Name"] ? 'selected' : ''}>${u["Name"]} (${u["Role"]})</option>`).join("");
+
+      const timelineContainer = document.getElementById("drawer-timeline");
+      let timelineHTML = `
+        <div class="border-l-2 border-indigo-500 pl-3 space-y-0.5">
+          <p class="text-[11px] text-indigo-400 font-semibold">${ticket["Date"] || "Today"} - Ticket Created</p>
+          <p class="text-[11px] text-slate-300">Opened by ${ticket["Agent Assigned"] || "System"} for ${ticket["Company"] || ""}</p>
+        </div>
+      `;
+      if (ticket["Remarks (with time & date)"]) {
+        timelineHTML += `
+          <div class="border-l-2 border-emerald-500 pl-3 space-y-0.5 pt-2">
+            <p class="text-[11px] text-emerald-400 font-semibold">${ticket["Remarks (with time & date)"]} - Follow-up Remark</p>
+            <p class="text-[11px] text-slate-300">Status: <b>${ticket["Status"]}</b> | Priority: <b>${ticket["Priority"]}</b></p>
+          </div>
+        `;
+      }
+      timelineContainer.innerHTML = timelineHTML;
+
+      document.getElementById("ticket-drawer").classList.remove("hidden");
+    }
+
+    function closeTicketDrawer() {
+      document.getElementById("ticket-drawer").classList.add("hidden");
+      activeTicketId = null;
+    }
+
+    async function saveTicketUpdate() {
+      if (!activeTicketId) return;
+
+      const ticket = CRM_DATA.tickets.find(t => t["Ticket ID"] === activeTicketId);
+      const newAgent = document.getElementById("drawer-agent").value;
+      const newStatus = document.getElementById("drawer-status").value;
+      const newCallReason = document.getElementById("drawer-call-reason").value;
+      const newPaymentStatus = document.getElementById("drawer-payment-status").value;
+      const newPriority = document.getElementById("drawer-priority").value;
+      const newCallDesc = document.getElementById("drawer-call-description").value;
+      const newProduct = document.getElementById("drawer-product").value;
+      const userRemarkInput = document.getElementById("drawer-followup-remark").value.trim();
+
+      const now = new Date();
+      const day = now.getDate();
+      const suffix = ["th","st","nd","rd"][(day % 10 > 3) ? 0 : (day % 100 - day % 10 != 10) * day % 10];
+      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      const monthStr = monthNames[now.getMonth()];
+      const hours = String(now.getHours()).padStart(2, '0');
+      const mins = String(now.getMinutes()).padStart(2, '0');
+      
+      const formattedTimestamp = userRemarkInput 
+        ? `${day}${suffix} ${monthStr} - ${hours}:${mins} - ${currentUser.name} - ${userRemarkInput}` 
+        : `${day}${suffix} ${monthStr} - ${hours}:${mins} - ${currentUser.name} - Status updated to ${newStatus}`;
+
+      const updateFields = {
+        "Status": newStatus,
+        "Call Reason": newCallReason,
+        "Payment Status": newPaymentStatus,
+        "Priority": newPriority,
+        "Call Description": newCallDesc,
+        "Product / Services": newProduct,
+        "Remarks (with time & date)": formattedTimestamp
+      };
+
+      ticket["Status"] = newStatus;
+      ticket["Call Reason"] = newCallReason;
+      ticket["Payment Status"] = newPaymentStatus;
+      ticket["Priority"] = newPriority;
+      ticket["Call Description"] = newCallDesc;
+      ticket["Product / Services"] = newProduct;
+      ticket["Remarks (with time & date)"] = formattedTimestamp;
+      renderDashboard();
+
+      fetch(WEB_APP_URL, {
+        method: "POST",
+        body: JSON.stringify({ sheetName: "Tickets_Master", action: "update", ticketId: activeTicketId, fields: updateFields })
+      });
+
+      if (ticket["Agent Assigned"] !== newAgent) {
+        const baseId = activeTicketId.split('-')[0] + '-' + activeTicketId.split('-')[1];
+        const existingCount = CRM_DATA.tickets.filter(t => t["Ticket ID"].startsWith(baseId)).length;
+        const suffixLetter = String.fromCharCode(64 + existingCount); 
+        const targetTicketId = `${baseId}-${suffixLetter}`;
+
+        await fetch(WEB_APP_URL, {
+          method: "POST",
+          body: JSON.stringify({ sheetName: "Tickets_Master", action: "update", ticketId: activeTicketId, fields: { "Status": "Closed", "Remarks (with time & date)": formattedTimestamp } })
+        });
+
+        const newTicketRow = [
+          ticket["Date"],
+          targetTicketId,
+          ticket["Name"],
+          ticket["Company"],
+          ticket["Designation"],
+          ticket["Contact"],
+          ticket["Email"],
+          newCallReason,
+          newCallDesc,
+          ticket["Call Code"],
+          ticket["Call Points"],
+          newAgent,
+          newStatus,
+          newPaymentStatus,
+          formattedTimestamp,
+          newProduct,
+          newPriority
         ];
 
-        // Helper function to safely hash password inputs on the fly using browser cryptography
-        async function sha256(message) {
-            const msgBuffer = new TextEncoder().encode(message);
-            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        await fetch(WEB_APP_URL, {
+          method: "POST",
+          body: JSON.stringify({ sheetName: "Tickets_Master", action: "append", row: newTicketRow })
+        });
+
+        alert(`Ticket successfully transferred to ${newAgent} as ${targetTicketId}!`);
+      } else {
+        alert("Follow-up remark and ticket updates saved successfully!");
+      }
+
+      closeTicketDrawer();
+      loadCRMData();
+    }
+
+    function openAssignTaskModal() {
+      document.getElementById("task-form-duedate").value = new Date().toISOString().split('T')[0];
+      document.getElementById("assign-task-modal").classList.remove("hidden");
+    }
+
+    function closeAssignTaskModal() {
+      document.getElementById("assign-task-modal").classList.add("hidden");
+    }
+
+    function submitAdminTask(event) {
+      event.preventDefault();
+      const newTask = {
+        id: "TASK-" + Math.floor(1000 + Math.random() * 9000),
+        assignedTo: document.getElementById("task-form-agent").value,
+        title: document.getElementById("task-form-title").value,
+        description: document.getElementById("task-form-desc").value,
+        priority: document.getElementById("task-form-priority").value,
+        dueDate: document.getElementById("task-form-duedate").value
+      };
+
+      CRM_DATA.adminTasks.push(newTask);
+      renderDashboard();
+      closeAssignTaskModal();
+      alert(`Task successfully assigned to ${newTask.assignedTo}!`);
+    }
+
+    function checkNewProduct(selectElem) {
+      if (selectElem.value === "ADD_NEW") {
+        const newProd = prompt("Enter new Product / Service name:");
+        if (newProd && newProd.trim() !== "") {
+          CRM_DATA.products.push(newProd.trim());
+          fetch(WEB_APP_URL, {
+            method: "POST",
+            body: JSON.stringify({ sheetName: "Master_Products", action: "append", row: [newProd.trim()] })
+          });
+          populateGlobalDropdowns();
+          selectElem.value = newProd.trim();
+        } else {
+          selectElem.selectedIndex = 0;
         }
+      }
+    }
 
-        // Master Call Codes Lookup
-        const CALL_DESCRIPTIONS = [
-            { code: "COL_01", desc: "First Follow-up Call", points: 10 },
-            { code: "COL_02", desc: "AMC Renewal Discussion", points: 15 },
-            { code: "COL_03", desc: "Technical Issue Resolution", points: 20 },
-            { code: "COL_04", desc: "Missed Follow-up Penalty", points: -2 }
-        ];
+    function updateCallPoints() {
+      const codeSelect = document.getElementById("form-call-code");
+      const selectedOption = codeSelect.options[codeSelect.selectedIndex];
+      const points = selectedOption ? selectedOption.getAttribute("data-points") : 0;
+      document.getElementById("form-call-points").value = points;
+    }
 
-        let currentUser = JSON.parse(localStorage.getItem('snor_current_user')) || null;
-        let usersList = JSON.parse(localStorage.getItem('snor_users')) || [];
-        let ticketsList = JSON.parse(localStorage.getItem('snor_tickets')) || [
-            { id: "TICK-1001", client: "Acme Corp", issue: "Server downtime error", status: "Open", priority: "High", agent: "Jayesh Bhargav", created: new Date().toISOString() },
-            { id: "TICK-1002", client: "Globex Ltd", issue: "AMC Contract Renewal", status: "In Progress", priority: "Medium", agent: "Archita Parikh", created: new Date().toISOString() }
-        ];
-        let callLogsList = JSON.parse(localStorage.getItem('snor_calls')) || [];
-        let amcList = JSON.parse(localStorage.getItem('snor_amc')) || [
-            { id: "AMC-501", client: "Alpha Industries", expiry: "2026-12-31", status: "Active", value: "$1,200" }
-        ];
-        let contactsList = JSON.parse(localStorage.getItem('snor_contacts')) || [
-            { name: "Robert Fox", company: "Acme Corp", phone: "555-0192", email: "robert@acme.com" }
-        ];
-
-        window.onload = function() {
-            syncSuperAdmins();
-            if (currentUser) {
-                if (currentUser.status === 'pending') {
-                    showView('pending-view');
-                } else {
-                    showDashboard();
-                }
-            } else {
-                showView('auth-view');
-            }
-        };
-
-        function syncSuperAdmins() {
-            SECURE_SUPER_ADMINS.forEach(sa => {
-                let existing = usersList.find(u => u.email === sa.email);
-                if (!existing) {
-                    usersList.push({ name: sa.name, email: sa.email, phone: sa.phone, passHash: sa.passHash, role: 'Super Admin', status: 'approved' });
-                } else {
-                    existing.role = 'Super Admin';
-                    existing.status = 'approved';
-                    existing.passHash = sa.passHash;
-                }
-            });
-            localStorage.setItem('snor_users', JSON.stringify(usersList));
+    function switchTab(tabId) {
+      ['overview', 'tickets', 'mytasks', 'workflow', 'callcodes', 'clients', 'users'].forEach(t => {
+        const elem = document.getElementById(`tab-${t}`);
+        if (elem) elem.classList.add('hidden');
+        const navElem = document.getElementById(`nav-${t}`);
+        if (navElem) {
+          navElem.classList.remove('bg-indigo-600', 'text-white');
+          navElem.classList.add('text-slate-400');
         }
+      });
+      
+      const targetTab = document.getElementById(`tab-${tabId}`);
+      if (targetTab) targetTab.classList.remove('hidden');
+      
+      const targetNav = document.getElementById(`nav-${tabId}`);
+      if (targetNav) {
+        targetNav.classList.add('bg-indigo-600', 'text-white');
+        targetNav.classList.remove('text-slate-400');
+      }
+      
+      const titles = { 
+        overview: 'Dashboard Overview', 
+        tickets: 'Support Tickets', 
+        mytasks: 'My Assigned Tasks & Tickets',
+        workflow: 'Workflow & Agent Monitoring',
+        callcodes: 'Master Call Codes & Points', 
+        clients: 'Clients Directory', 
+        users: 'Users Directory' 
+      };
+      document.getElementById('page-title').innerText = titles[tabId] || 'Dashboard';
+    }
 
-        function showView(viewId) {
-            ['auth-view', 'pending-view', 'dashboard-view'].forEach(id => {
-                document.getElementById(id).classList.add('hidden');
-            });
-            document.getElementById(viewId).classList.remove('hidden');
-        }
+    function openNewTicketModal() {
+      document.getElementById("form-date").value = new Date().toISOString().split('T')[0];
+      document.getElementById("ticket-modal").classList.remove("hidden");
+    }
 
-        function switchAuthTab(tab) {
-            if (tab === 'login') {
-                document.getElementById('form-login').classList.remove('hidden');
-                document.getElementById('form-register').classList.add('hidden');
-                document.getElementById('tab-login').className = "flex-1 py-2 text-sm font-medium rounded-lg bg-indigo-600 text-white transition";
-                document.getElementById('tab-register').className = "flex-1 py-2 text-sm font-medium rounded-lg text-slate-400 hover:text-white transition";
-            } else {
-                document.getElementById('form-login').classList.add('hidden');
-                document.getElementById('form-register').classList.remove('hidden');
-                document.getElementById('tab-register').className = "flex-1 py-2 text-sm font-medium rounded-lg bg-indigo-600 text-white transition";
-                document.getElementById('tab-login').className = "flex-1 py-2 text-sm font-medium rounded-lg text-slate-400 hover:text-white transition";
-            }
-            document.getElementById('auth-error').classList.add('hidden');
-        }
+    function closeNewTicketModal() {
+      document.getElementById("ticket-modal").classList.add("hidden");
+    }
 
-        async function handleLogin(e) {
-            e.preventDefault();
-            const identifier = document.getElementById('login-id').value.trim();
-            const pass = document.getElementById('login-pass').value;
-            const inputHash = await sha256(pass);
+    function logout() {
+      if (confirm("Are you sure you want to log out?")) {
+        document.getElementById("login-screen").classList.remove("hidden");
+        toggleAuthMode('signin');
+      }
+    }
 
-            const user = usersList.find(u => (u.email === identifier || u.phone === identifier) && u.passHash === inputHash);
-            if (!user) {
-                showAuthError("Invalid credentials or user not found.");
-                return;
-            }
+    function toggleAuthMode(mode) {
+      if (mode === 'register') {
+        document.getElementById("signin-form").classList.add("hidden");
+        document.getElementById("register-form").classList.remove("hidden");
+        document.getElementById("auth-title").innerText = "New User Registration";
+        document.getElementById("auth-subtitle").innerText = "Register your account for SNOR-CRM";
+      } else {
+        document.getElementById("register-form").classList.add("hidden");
+        document.getElementById("signin-form").classList.remove("hidden");
+        document.getElementById("auth-title").innerText = "SNOR-CRM Sign In";
+        document.getElementById("auth-subtitle").innerText = "Please sign in to access your dashboard";
+      }
+    }
 
-            currentUser = user;
-            localStorage.setItem('snor_current_user', JSON.stringify(currentUser));
+    async function handleLogin(event) {
+      event.preventDefault();
+      const email = document.getElementById("login-email").value.trim().toLowerCase();
+      const matchedUser = CRM_DATA.users.find(u => (u["Email"] || "").trim().toLowerCase() === email);
+      
+      if (!matchedUser) {
+        alert("Account not found. Please register first.");
+        return;
+      }
 
-            if (user.status === 'pending') {
-                showView('pending-view');
-            } else {
-                showDashboard();
-            }
-        }
+      const userStatus = (matchedUser["Status"] || "").trim().toLowerCase();
+      if (userStatus !== "approved") {
+        alert("Your account is currently pending approval by a Super Admin.");
+        return;
+      }
 
-        async function handleRegister(e) {
-            e.preventDefault();
-            const name = document.getElementById('reg-name').value.trim();
-            const email = document.getElementById('reg-email').value.trim();
-            const phone = document.getElementById('reg-phone').value.trim();
-            const pass = document.getElementById('reg-pass').value;
+      currentUser = { name: matchedUser["Name"], role: matchedUser["Role"] };
+      document.getElementById("current-user-name").innerText = currentUser.name;
+      document.getElementById("current-user-role").innerText = currentUser.role;
 
-            const passRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
-            if (!passRegex.test(pass)) {
-                showAuthError("Password must be 8+ chars with uppercase, lowercase, number & special character.");
-                return;
-            }
+      const workflowNav = document.getElementById("workflow-nav-container");
+      if (currentUser.role === "Super Admin") {
+        workflowNav.classList.remove("hidden");
+      } else {
+        workflowNav.classList.add("hidden");
+      }
+      
+      document.getElementById("login-screen").classList.add("hidden");
+      document.getElementById("login-password").value = "";
+      renderDashboard();
+    }
 
-            if (usersList.some(u => u.email === email)) {
-                showAuthError("Email is already registered.");
-                return;
-            }
+    async function handleRegister(event) {
+      event.preventDefault();
+      const name = document.getElementById("reg-name").value;
+      const email = document.getElementById("reg-email").value;
+      const phone = document.getElementById("reg-phone").value;
+      const password = document.getElementById("reg-password").value;
 
-            const passHash = await sha256(pass);
-            const newUser = { name, email, phone, passHash, role: 'Agent', status: 'pending' };
-            usersList.push(newUser);
-            localStorage.setItem('snor_users', JSON.stringify(usersList));
+      const newUserRow = [name, email, phone, "Agent", "Pending", password];
 
-            currentUser = newUser;
-            localStorage.setItem('snor_current_user', JSON.stringify(currentUser));
-            showView('pending-view');
-        }
+      await fetch(WEB_APP_URL, {
+        method: "POST",
+        body: JSON.stringify({ sheetName: "Users_Directory", action: "append", row: newUserRow })
+      });
 
-        function showAuthError(msg) {
-            const err = document.getElementById('auth-error');
-            err.innerText = msg;
-            err.classList.remove('hidden');
-        }
+      alert("Registration submitted successfully! Please sign in once approved.");
+      toggleAuthMode('signin');
+      loadCRMData();
+    }
 
-        function logout() {
-            currentUser = null;
-            localStorage.removeItem('snor_current_user');
-            showView('auth-view');
-        }
+    function filterCallCodes() {
+      const query = document.getElementById("code-search").value.toLowerCase();
+      const rows = document.querySelectorAll("#call-codes-table-body tr");
+      rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        row.style.display = text.includes(query) ? "" : "none";
+      });
+    }
 
-        function showDashboard() {
-            showView('dashboard-view');
-            document.getElementById('nav-user-name').innerText = currentUser.name;
-            document.getElementById('nav-user-email').innerText = currentUser.email;
-            document.getElementById('nav-role-badge').innerText = currentUser.role;
+    async function submitTicket(event) {
+      event.preventDefault();
+      const now = new Date();
+      const day = now.getDate();
+      const suffix = ["th","st","nd","rd"][(day % 10 > 3) ? 0 : (day % 100 - day % 10 != 10) * day % 10];
+      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      const initialTimestamp = `${day}${suffix} ${monthNames[now.getMonth()]} - ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')} - ${currentUser.name} - Ticket Created`;
 
-            const approvalsBtn = document.getElementById('sidebar-approvals');
-            if (currentUser.role === 'Super Admin') {
-                approvalsBtn.classList.remove('hidden');
-                updateApprovalBadge();
-            } else {
-                approvalsBtn.classList.add('hidden');
-            }
+      const newRow = [
+        document.getElementById("form-date").value,
+        document.getElementById("form-ticket-id").value,
+        document.getElementById("form-name").value,
+        document.getElementById("form-company").value,
+        document.getElementById("form-designation").value,
+        document.getElementById("form-contact").value,
+        document.getElementById("form-email").value,
+        document.getElementById("form-call-reason").value,
+        document.getElementById("form-call-description").value,
+        document.getElementById("form-call-code").value,
+        document.getElementById("form-call-points").value,
+        document.getElementById("form-agent").value,
+        document.getElementById("form-status").value,
+        document.getElementById("form-payment-status").value,
+        initialTimestamp,
+        document.getElementById("form-product").value,
+        document.getElementById("form-priority").value
+      ];
 
-            switchTab('overview');
-        }
+      await fetch(WEB_APP_URL, {
+        method: "POST",
+        body: JSON.stringify({ sheetName: "Tickets_Master", action: "append", row: newRow })
+      });
 
-        function updateApprovalBadge() {
-            const pendingCount = usersList.filter(u => u.status === 'pending').length;
-            const badge = document.getElementById('approval-badge');
-            if (pendingCount > 0) {
-                badge.innerText = pendingCount;
-                badge.classList.remove('hidden');
-            } else {
-                badge.classList.add('hidden');
-            }
-        }
+      loadCRMData();
+      closeNewTicketModal();
+      alert("Ticket successfully logged and synced!");
+    }
 
-        let activeTab = 'overview';
-        function switchTab(tab) {
-            activeTab = tab;
-            document.querySelectorAll('.sidebar-btn').forEach(btn => {
-                btn.className = "sidebar-btn flex items-center space-x-3 w-full px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-900 hover:text-white transition";
-            });
-            const activeBtn = document.getElementById(`sidebar-${tab}`);
-            if (activeBtn) {
-                activeBtn.className = "sidebar-btn flex items-center space-x-3 w-full px-4 py-3 rounded-xl text-sm font-medium bg-indigo-600 text-white transition";
-            }
-            renderTabContent();
-        }
-
-        function renderTabContent() {
-            const container = document.getElementById('main-content-area');
-            if (activeTab === 'overview') {
-                container.innerHTML = `
-                    <h2 class="text-xl font-bold text-white mb-6">Operations Overview</h2>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                        <div class="bg-slate-800 border border-slate-700/50 p-5 rounded-2xl">
-                            <div class="text-slate-400 text-xs font-semibold uppercase">Total Tickets</div>
-                            <div class="text-3xl font-bold text-white mt-2">${ticketsList.length}</div>
-                        </div>
-                        <div class="bg-slate-800 border border-slate-700/50 p-5 rounded-2xl">
-                            <div class="text-slate-400 text-xs font-semibold uppercase">Active AMCs</div>
-                            <div class="text-3xl font-bold text-emerald-400 mt-2">${amcList.length}</div>
-                        </div>
-                        <div class="bg-slate-800 border border-slate-700/50 p-5 rounded-2xl">
-                            <div class="text-slate-400 text-xs font-semibold uppercase">Call Logs Recorded</div>
-                            <div class="text-3xl font-bold text-indigo-400 mt-2">${callLogsList.length}</div>
-                        </div>
-                        <div class="bg-slate-800 border border-slate-700/50 p-5 rounded-2xl">
-                            <div class="text-slate-400 text-xs font-semibold uppercase">Pending Approvals</div>
-                            <div class="text-3xl font-bold text-amber-400 mt-2">${usersList.filter(u => u.status === 'pending').length}</div>
-                        </div>
-                    </div>
-                `;
-            } else if (activeTab === 'tickets') {
-                container.innerHTML = `
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-xl font-bold text-white">Tickets & SLA Management</h2>
-                        <button onclick="openNewTicketModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-sm px-4 py-2 rounded-xl transition">New Ticket</button>
-                    </div>
-                    <div class="bg-slate-800 border border-slate-700/50 rounded-2xl overflow-hidden">
-                        <table class="w-full text-left text-sm text-slate-300">
-                            <thead class="bg-slate-900 text-xs uppercase text-slate-400 border-b border-slate-700">
-                                <tr>
-                                    <th class="p-4">ID</th>
-                                    <th class="p-4">Client</th>
-                                    <th class="p-4">Issue</th>
-                                    <th class="p-4">Priority</th>
-                                    <th class="p-4">Status</th>
-                                    <th class="p-4">Assigned Agent</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-700">
-                                ${ticketsList.map(t => `
-                                    <tr>
-                                        <td class="p-4 font-mono text-indigo-400">${t.id}</td>
-                                        <td class="p-4 font-semibold text-white">${t.client}</td>
-                                        <td class="p-4">${t.issue}</td>
-                                        <td class="p-4"><span class="px-2 py-1 rounded text-xs ${t.priority==='High'?'bg-rose-500/20 text-rose-400':'bg-amber-500/20 text-amber-400'}">${t.priority}</span></td>
-                                        <td class="p-4">${t.status}</td>
-                                        <td class="p-4 text-slate-400">${t.agent}</td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                    </div>
-                `;
-            } else if (activeTab === 'calls') {
-                container.innerHTML = `
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-xl font-bold text-white">Call Logs & Point Penalties (-2 for Missed Follow-up)</h2>
-                        <button onclick="logNewCall()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-sm px-4 py-2 rounded-xl transition">Log Call</button>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="bg-slate-800 border border-slate-700/50 p-5 rounded-2xl">
-                            <h3 class="text-sm font-semibold uppercase text-slate-400 mb-4">Master Call Codes Lookup</h3>
-                            <div class="space-y-3">
-                                ${CALL_DESCRIPTIONS.map(c => `
-                                    <div class="flex justify-between items-center p-3 bg-slate-900 rounded-xl border border-slate-700">
-                                        <div>
-                                            <span class="font-mono text-indigo-400 font-bold">${c.code}</span>
-                                            <div class="text-sm text-slate-200">${c.desc}</div>
-                                        </div>
-                                        <span class="px-3 py-1 rounded-lg text-xs font-bold ${c.points < 0 ? 'bg-rose-500/20 text-rose-400' : 'bg-emerald-500/20 text-emerald-400'}">${c.points > 0 ? '+' : ''}${c.points} pts</span>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-                        <div class="bg-slate-800 border border-slate-700/50 p-5 rounded-2xl">
-                            <h3 class="text-sm font-semibold uppercase text-slate-400 mb-4">Recent Call Activity</h3>
-                            <div class="space-y-3">
-                                ${callLogsList.length === 0 ? '<p class="text-sm text-slate-500">No calls logged yet.</p>' : callLogsList.map(l => `
-                                    <div class="p-3 bg-slate-900 rounded-xl border border-slate-700 flex justify-between items-center">
-                                        <div>
-                                            <div class="text-sm font-semibold text-white">${l.client}</div>
-                                            <div class="text-xs text-slate-400">${l.desc}</div>
-                                        </div>
-                                        <span class="text-xs font-bold ${l.points < 0 ? 'text-rose-400' : 'text-emerald-400'}">${l.points > 0 ? '+' : ''}${l.points} pts</span>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-                    </div>
-                `;
-            } else if (activeTab === 'leaderboard') {
-                container.innerHTML = `
-                    <h2 class="text-xl font-bold text-white mb-6">Agent Leaderboard & Points</h2>
-                    <div class="bg-slate-800 border border-slate-700/50 rounded-2xl p-6">
-                        <div class="space-y-3">
-                            ${usersList.filter(u => u.status === 'approved').map((u, i) => `
-                                <div class="flex items-center justify-between p-4 bg-slate-900 rounded-xl border border-slate-700">
-                                    <div class="flex items-center space-x-3">
-                                        <span class="w-8 h-8 rounded-full bg-indigo-600/20 text-indigo-400 font-bold flex items-center justify-center text-sm">#${i+1}</span>
-                                        <div>
-                                            <div class="font-semibold text-white">${u.name}</div>
-                                            <div class="text-xs text-slate-400">${u.role}</div>
-                                        </div>
-                                    </div>
-                                    <span class="font-bold text-emerald-400">100 Pts</span>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                `;
-            } else if (activeTab === 'amc') {
-                container.innerHTML = `
-                    <h2 class="text-xl font-bold text-white mb-6">AMC Contracts Tracker</h2>
-                    <div class="bg-slate-800 border border-slate-700/50 rounded-2xl overflow-hidden">
-                        <table class="w-full text-left text-sm text-slate-300">
-                            <thead class="bg-slate-900 text-xs uppercase text-slate-400 border-b border-slate-700">
-                                <tr>
-                                    <th class="p-4">Contract ID</th>
-                                    <th class="p-4">Client</th>
-                                    <th class="p-4">Expiry Date</th>
-                                    <th class="p-4">Status</th>
-                                    <th class="p-4">Value</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-700">
-                                ${amcList.map(a => `
-                                    <tr>
-                                        <td class="p-4 font-mono text-indigo-400">${a.id}</td>
-                                        <td class="p-4 font-semibold text-white">${a.client}</td>
-                                        <td class="p-4">${a.expiry}</td>
-                                        <td class="p-4"><span class="px-2 py-1 rounded text-xs bg-emerald-500/20 text-emerald-400">${a.status}</span></td>
-                                        <td class="p-4 font-semibold text-white">${a.value}</td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                    </div>
-                `;
-            } else if (activeTab === 'contacts') {
-                container.innerHTML = `
-                    <h2 class="text-xl font-bold text-white mb-6">Contacts Directory</h2>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                        ${contactsList.map(c => `
-                            <div class="bg-slate-800 border border-slate-700/50 p-5 rounded-2xl">
-                                <div class="font-bold text-white text-base mb-1">${c.name}</div>
-                                <div class="text-xs text-indigo-400 font-semibold mb-3">${c.company}</div>
-                                <div class="text-sm text-slate-300 space-y-1">
-                                    <div><i class="fa-solid fa-phone w-5 text-slate-500"></i> ${c.phone}</div>
-                                    <div><i class="fa-solid fa-envelope w-5 text-slate-500"></i> ${c.email}</div>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            } else if (activeTab === 'approvals' && currentUser.role === 'Super Admin') {
-                const pendingUsers = usersList.filter(u => u.status === 'pending');
-                container.innerHTML = `
-                    <h2 class="text-xl font-bold text-white mb-6">Pending Agent Approvals</h2>
-                    <div class="bg-slate-800 border border-slate-700/50 rounded-2xl p-6">
-                        ${pendingUsers.length === 0 ? '<p class="text-sm text-slate-400">No pending agent registrations.</p>' : `
-                            <div class="space-y-4">
-                                ${pendingUsers.map(u => `
-                                    <div class="p-4 bg-slate-900 rounded-xl border border-slate-700 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                                        <div>
-                                            <div class="font-bold text-white text-base">${u.name}</div>
-                                            <div class="text-xs text-slate-400">${u.email} • ${u.phone}</div>
-                                        </div>
-                                        <button onclick="approveAgent('${u.email}')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-sm px-4 py-2 rounded-xl transition">Approve & Assign</button>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        `}
-                    </div>
-                `;
-            }
-        }
-
-        function approveAgent(email) {
-            const u = usersList.find(user => user.email === email);
-            if (u) {
-                u.status = 'approved';
-                localStorage.setItem('snor_users', JSON.stringify(usersList));
-                updateApprovalBadge();
-                renderTabContent();
-            }
-        }
-
-        function openNewTicketModal() {
-            const client = prompt("Enter Client Name:");
-            const issue = prompt("Enter Issue Description:");
-            if (client && issue) {
-                ticketsList.push({
-                    id: "TICK-" + Math.floor(1000 + Math.random() * 9000),
-                    client,
-                    issue,
-                    status: "Open",
-                    priority: "Medium",
-                    agent: currentUser.name,
-                    created: new Date().toISOString()
-                });
-                localStorage.setItem('snor_tickets', JSON.stringify(ticketsList));
-                renderTabContent();
-            }
-        }
-
-        function logNewCall() {
-            const client = prompt("Enter Client Name:");
-            const codeInput = prompt("Enter Call Code (COL_01, COL_02, COL_03, or COL_04 for -2 penalty):") || "COL_01";
-            const match = CALL_DESCRIPTIONS.find(c => c.code === codeInput) || CALL_DESCRIPTIONS[0];
-            
-            callLogsList.push({
-                client,
-                code: match.code,
-                desc: match.desc,
-                points: match.points,
-                date: new Date().toISOString()
-            });
-            localStorage.setItem('snor_calls', JSON.stringify(callLogsList));
-            renderTabContent();
-        }
-    </script>
+    loadCRMData();
+  </script>
 </body>
 </html>
