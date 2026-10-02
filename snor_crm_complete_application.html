@@ -22,167 +22,212 @@
       <form id="signin-form" onsubmit="handleLogin(event)" class="space-y-4 text-sm">
         <div>
           <label class="block text-slate-400 text-xs mb-1">Email Address</label>
-          <input type="email" id="login-email" required class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-slate-100 focus:outline-none focus:border-indigo-500" placeholder="name@example.com">
+          <input type="email" id="login-email" required class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-slate-100 focus:outline-none focus:border-indigo-500" value="jayeshbhargav6000@gmail.com" placeholder="name@example.com">
         </div>
         <div>
           <label class="block text-slate-400 text-xs mb-1">Password</label>
-          <input type="password" id="login-password" required class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-slate-100 focus:outline-none focus:border-indigo-500" placeholder="••••••••">
+          <input type="password" id="login-password" required class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-slate-100 focus:outline-none focus:border-indigo-500" value="Foxy@6000" placeholder="••••••••">
         </div>
-        <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 rounded-lg font-semibold text-white transition shadow-lg">Sign In</button>
-        <div class="text-center pt-2">
-          <button type="button" onclick="toggleAuthMode('register')" class="text-xs text-indigo-400 hover:underline">Don't have an account? Register new user</button>
-        </div>
-      </form>
-
-      <!-- Register Form -->
-      <form id="register-form" onsubmit="handleRegister(event)" class="space-y-3 text-sm hidden">
-        <div>
-          <label class="block text-slate-400 text-xs mb-1">Full Name</label>
-          <input type="text" id="reg-name" required class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-slate-100 focus:outline-none focus:border-indigo-500" placeholder="John Doe">
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="block text-slate-400 text-xs mb-1">Email Address</label>
-            <input type="email" id="reg-email" required class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-slate-100 focus:outline-none focus:border-indigo-500" placeholder="name@example.com">
-          </div>
-          <div>
-            <label class="block text-slate-400 text-xs mb-1">Phone Number</label>
-            <input type="text" id="reg-phone" required class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-slate-100 focus:outline-none focus:border-indigo-500" placeholder="9999999999">
-          </div>
-        </div>
-        <div>
-          <label class="block text-slate-400 text-xs mb-1">Password</label>
-          <input type="password" id="reg-password" required class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-slate-100 focus:outline-none focus:border-indigo-500" placeholder="••••••••">
-        </div>
-        <button type="submit" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 rounded-lg font-semibold text-white transition shadow-lg mt-2">Register Account</button>
-        <div class="text-center pt-2">
-          <button type="button" onclick="toggleAuthMode('signin')" class="text-xs text-indigo-400 hover:underline">Already have an account? Sign In</button>
-        </div>
+        <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-lg transition shadow-lg shadow-indigo-600/30">Sign In</button>
       </form>
     </div>
   </div>
 
+  <!-- App Container -->
   <div class="flex h-screen overflow-hidden">
     <!-- Sidebar -->
-    <aside class="w-64 bg-slate-950 border-r border-slate-800 flex flex-col">
-      <div class="p-5 flex items-center space-x-3 border-b border-slate-800">
-        <div class="bg-indigo-600 p-2 rounded-lg text-white font-bold"><i class="fa-solid fa-headset"></i></div>
-        <span class="text-xl font-extrabold tracking-wider bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">SNOR-CRM</span>
-      </div>
-      <nav class="flex-1 p-4 space-y-1">
-        <button onclick="switchTab('overview')" id="nav-overview" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl bg-indigo-600 text-white font-medium transition"><i class="fa-solid fa-chart-pie w-5"></i><span>Overview</span></button>
-        <button onclick="switchTab('tickets')" id="nav-tickets" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-900 hover:text-white font-medium transition"><i class="fa-solid fa-ticket w-5"></i><span>Support Tickets</span></button>
-        <button onclick="switchTab('mytasks')" id="nav-mytasks" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-900 hover:text-white font-medium transition"><i class="fa-solid fa-list-check w-5"></i><span>My Tasks</span></button>
-        <button onclick="switchTab('callcodes')" id="nav-callcodes" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-900 hover:text-white font-medium transition"><i class="fa-solid fa-code-branch w-5"></i><span>Master Call Codes</span></button>
-        <button onclick="switchTab('clients')" id="nav-clients" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-900 hover:text-white font-medium transition"><i class="fa-solid fa-address-book w-5"></i><span>Clients Directory</span></button>
-        <button onclick="switchTab('users')" id="nav-users" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-900 hover:text-white font-medium transition"><i class="fa-solid fa-users-gear w-5"></i><span>Users Directory</span></button>
-      </nav>
-      
-      <!-- Super Admin Only Workflow Nav Option -->
-      <div id="workflow-nav-container" class="px-4 pb-2 hidden">
-        <button onclick="switchTab('workflow')" id="nav-workflow" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-900 hover:text-white font-medium transition border border-indigo-500/30 bg-indigo-500/5">
-          <i class="fa-solid fa-diagram-project w-5 text-indigo-400"></i>
-          <span>Workflow / Monitor</span>
-        </button>
+    <aside class="w-64 bg-slate-950 border-r border-slate-800 flex flex-col justify-between">
+      <div>
+        <div class="h-16 flex items-center px-6 border-b border-slate-800 space-x-3">
+          <div class="bg-gradient-to-br from-indigo-500 to-purple-600 p-2 rounded-lg text-white font-bold"><i class="fa-solid fa-ticket"></i></div>
+          <span class="text-lg font-extrabold tracking-wider bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">SNOR-CRM</span>
+        </div>
+        <nav class="flex-1 p-4 space-y-1">
+          <button onclick="switchTab('overview')" id="nav-overview" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl bg-indigo-600 text-white font-medium transition"><i class="fa-solid fa-chart-pie w-5"></i><span>Dashboard</span></button>
+          <button onclick="switchTab('tickets')" id="nav-tickets" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-900 hover:text-white font-medium transition"><i class="fa-solid fa-headset w-5"></i><span>Tickets</span></button>
+          <button onclick="switchTab('mytasks')" id="nav-mytasks" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-900 hover:text-white font-medium transition"><i class="fa-solid fa-list-check w-5"></i><span>My Tasks</span></button>
+          <button onclick="switchTab('workflow')" id="nav-workflow" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-900 hover:text-white font-medium transition"><i class="fa-solid fa-diagram-project w-5"></i><span>Workflow / Monitor</span></button>
+          <button onclick="switchTab('callcodes')" id="nav-callcodes" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-900 hover:text-white font-medium transition"><i class="fa-solid fa-phone w-5"></i><span>Master Call Codes</span></button>
+          <button onclick="switchTab('clients')" id="nav-clients" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-900 hover:text-white font-medium transition"><i class="fa-solid fa-address-book w-5"></i><span>Clients Directory</span></button>
+          <button onclick="switchTab('users')" id="nav-users" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-900 hover:text-white font-medium transition"><i class="fa-solid fa-users w-5"></i><span>Team</span></button>
+        </nav>
       </div>
 
-      <!-- User Profile & Log Out Footer -->
+      <!-- Sidebar Footer -->
       <div class="p-4 border-t border-slate-800 space-y-3">
         <div class="flex items-center justify-between">
           <div>
-            <p id="current-user-name" class="text-sm font-bold text-slate-200">Jayesh Bhargav</p>
-            <p id="current-user-role" class="text-xs text-indigo-400">Super Admin</p>
+            <h4 id="user-display-name" class="text-sm font-semibold text-slate-200">Jayesh Bhargav</h4>
+            <span id="user-display-role" class="text-xs text-indigo-400 font-medium">Super Admin</span>
           </div>
-          <button onclick="loadCRMData()" class="text-slate-400 hover:text-white" title="Sync Data"><i class="fa-solid fa-sync"></i></button>
+          <button onclick="loadAppData()" class="text-slate-400 hover:text-white transition" title="Refresh Data"><i class="fa-solid fa-rotate"></i></button>
         </div>
-        <button onclick="logout()" class="w-full flex items-center justify-center space-x-2 py-2 px-3 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 text-xs font-semibold transition">
-          <i class="fa-solid fa-right-from-bracket"></i>
-          <span>Log Out</span>
-        </button>
+        <button onclick="handleLogout()" class="w-full py-2 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 rounded-lg text-xs font-semibold transition flex items-center justify-center space-x-2"><i class="fa-solid fa-right-from-bracket"></i><span>Log Out</span></button>
       </div>
     </aside>
 
     <!-- Main Content Area -->
     <main class="flex-1 flex flex-col overflow-y-auto">
       <header class="bg-slate-900 border-b border-slate-800 h-16 flex items-center justify-between px-8">
-        <h1 id="page-title" class="text-xl font-bold">Dashboard Overview</h1>
+        <h1 id="page-title" class="text-xl font-bold">Dashboard</h1>
         <button onclick="openNewTicketModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg font-medium text-sm transition flex items-center space-x-2">
           <i class="fa-solid fa-plus"></i><span>Create Ticket</span>
         </button>
       </header>
 
       <div class="p-8">
-        <!-- Overview Tab -->
+        <!-- Dashboard / Overview Tab -->
         <section id="tab-overview" class="space-y-6">
           <div class="grid grid-cols-4 gap-6">
-            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
-              <p class="text-slate-400 text-sm">Total Tickets</p>
-              <h3 id="stat-total-tickets" class="text-3xl font-bold mt-2">0</h3>
+            <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 shadow-sm">
+              <p class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Total Tickets</p>
+              <h3 id="stat-total-tickets" class="text-3xl font-bold mt-2 text-white">0</h3>
             </div>
-            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
-              <p class="text-slate-400 text-sm">Total Open Tickets</p>
-              <h3 id="stat-open-tickets" class="text-3xl font-bold mt-2 text-amber-400">0</h3>
+            <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 shadow-sm">
+              <p class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Fresh Open (Today)</p>
+              <h3 id="stat-fresh-open" class="text-3xl font-bold mt-2 text-sky-400">0</h3>
             </div>
-            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
-              <p class="text-slate-400 text-sm">Fresh Tickets (Today)</p>
-              <h3 id="stat-fresh-tickets" class="text-3xl font-bold mt-2 text-indigo-400">0</h3>
+            <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 shadow-sm">
+              <p class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Fresh Closed (Today)</p>
+              <h3 id="stat-fresh-closed" class="text-3xl font-bold mt-2 text-emerald-400">0</h3>
             </div>
-            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
-              <p class="text-slate-400 text-sm">Closed Today</p>
-              <h3 id="stat-closed-today" class="text-3xl font-bold mt-2 text-emerald-400">0</h3>
+            <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 shadow-sm">
+              <p class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Payment Pending</p>
+              <h3 id="stat-payment-pending" class="text-3xl font-bold mt-2 text-amber-400">0</h3>
+            </div>
+            <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 shadow-sm">
+              <p class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Payment Done Today</p>
+              <h3 id="stat-payment-done-today" class="text-3xl font-bold mt-2 text-teal-400">0</h3>
+            </div>
+            <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 shadow-sm">
+              <p class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Low Priority</p>
+              <h3 id="stat-priority-low" class="text-3xl font-bold mt-2 text-blue-400">0</h3>
+            </div>
+            <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 shadow-sm">
+              <p class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Medium Priority</p>
+              <h3 id="stat-priority-med" class="text-3xl font-bold mt-2 text-indigo-400">0</h3>
+            </div>
+            <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 shadow-sm">
+              <p class="text-slate-400 text-xs font-semibold uppercase tracking-wider">High Priority</p>
+              <h3 id="stat-priority-high" class="text-3xl font-bold mt-2 text-rose-400">0</h3>
             </div>
           </div>
-          <div class="grid grid-cols-4 gap-6">
-            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
-              <p class="text-slate-400 text-sm">Payment: Done</p>
-              <h3 id="stat-payment-done" class="text-3xl font-bold mt-2 text-emerald-400">0</h3>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-2">
+            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 space-y-4">
+              <div class="flex items-center justify-between">
+                <h3 class="text-base font-bold text-slate-200 flex items-center space-x-2">
+                  <i class="fa-solid fa-headset text-indigo-400"></i><span>Agent Ticket Workload</span>
+                </h3>
+                <span class="text-xs text-slate-400">Pending vs Closed</span>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                  <thead class="bg-slate-900 text-slate-400 uppercase">
+                    <tr>
+                      <th class="p-3">Agent Name</th>
+                      <th class="p-3">Role</th>
+                      <th class="p-3 text-center">Pending Tickets</th>
+                      <th class="p-3 text-center">Total Assigned</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dashboard-agent-tickets" class="divide-y divide-slate-700">
+                    <tr><td colspan="4" class="p-3 text-center text-slate-500">Loading agent workload...</td></tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
-            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
-              <p class="text-slate-400 text-sm">Payment Awaited</p>
-              <h3 id="stat-payment-awaited" class="text-3xl font-bold mt-2 text-rose-400">0</h3>
+
+            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 space-y-4">
+              <div class="flex items-center justify-between">
+                <h3 class="text-base font-bold text-slate-200 flex items-center space-x-2">
+                  <i class="fa-solid fa-list-check text-purple-400"></i><span>Agent Task Workload</span>
+                </h3>
+                <span class="text-xs text-slate-400">Active vs Completed</span>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                  <thead class="bg-slate-900 text-slate-400 uppercase">
+                    <tr>
+                      <th class="p-3">Agent Name</th>
+                      <th class="p-3">Role</th>
+                      <th class="p-3 text-center">Active Tasks</th>
+                      <th class="p-3 text-center">Completed Tasks</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dashboard-agent-tasks" class="divide-y divide-slate-700">
+                    <tr><td colspan="4" class="p-3 text-center text-slate-500">Loading task workload...</td></tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
-            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
-              <p class="text-slate-400 text-sm">Medium Priority Tickets</p>
-              <h3 id="stat-med-priority" class="text-3xl font-bold mt-2 text-blue-400">0</h3>
-            </div>
-            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
-              <p class="text-slate-400 text-sm">High Priority Tickets</p>
-              <h3 id="stat-high-priority" class="text-3xl font-bold mt-2 text-rose-400">0</h3>
+          </div>
+        </section>
+
+        <!-- Tickets Tab -->
+        <section id="tab-tickets" class="space-y-6 hidden">
+          <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+            <h3 class="text-lg font-semibold mb-4">Tickets Master</h3>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-sm">
+                <thead class="bg-slate-900 text-slate-400 uppercase text-xs">
+                  <tr>
+                    <th class="p-4">Ticket ID</th>
+                    <th class="p-4">Date / Created</th>
+                    <th class="p-4">Company / SPOC</th>
+                    <th class="p-4">Call Reason</th>
+                    <th class="p-4">Agent</th>
+                    <th class="p-4">Status</th>
+                    <th class="p-4">Priority</th>
+                    <th class="p-4">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="tickets-table-body" class="divide-y divide-slate-700">
+                  <tr><td colspan="8" class="p-4 text-center text-slate-500">Loading tickets...</td></tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </section>
 
         <!-- My Tasks Tab -->
-        <section id="tab-mytasks" class="hidden space-y-6">
+        <section id="tab-mytasks" class="space-y-6 hidden">
           <div class="flex justify-between items-center">
             <div>
-              <h2 class="text-lg font-bold">My Assigned Tasks & Tickets</h2>
-              <p class="text-xs text-slate-400 mt-0.5">Tickets assigned to you and administrative tasks created by Super Admin.</p>
+              <h2 class="text-lg font-bold">My Tasks & Assigned Tickets</h2>
+              <p class="text-xs text-slate-400 mt-0.5">Pending assigned tickets on the left, and Super Admin tasks with check-off options on the right.</p>
             </div>
           </div>
-          <div class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
-            <table class="w-full text-left border-collapse text-sm">
-              <thead>
-                <tr class="bg-slate-900 border-b border-slate-700 text-slate-400 text-xs uppercase">
-                  <th class="p-4">Reference / ID</th>
-                  <th class="p-4">Type</th>
-                  <th class="p-4">Assigned By / Client</th>
-                  <th class="p-4">Description / Details</th>
-                  <th class="p-4">Priority</th>
-                  <th class="p-4">Status</th>
-                </tr>
-              </thead>
-              <tbody id="my-tasks-table-body" class="divide-y divide-slate-700"></tbody>
-            </table>
+          
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+            <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 space-y-4">
+              <div class="flex items-center justify-between border-b border-slate-700 pb-3">
+                <h3 class="font-bold text-sky-400 text-sm uppercase tracking-wider flex items-center space-x-2">
+                  <i class="fa-solid fa-headset"></i><span>My Pending Tickets</span>
+                </h3>
+                <span id="pending-ticket-count" class="text-xs bg-slate-900 px-2.5 py-1 rounded-full text-slate-400">0 pending</span>
+              </div>
+              <div id="mytasks-tickets-list" class="space-y-3 max-h-[500px] overflow-y-auto"></div>
+            </div>
+
+            <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 space-y-4">
+              <div class="flex items-center justify-between border-b border-slate-700 pb-3">
+                <h3 class="font-bold text-purple-400 text-sm uppercase tracking-wider flex items-center space-x-2">
+                  <i class="fa-solid fa-list-check"></i><span>Super Admin Direct Tasks</span>
+                </h3>
+                <span id="admin-task-count" class="text-xs bg-slate-900 px-2.5 py-1 rounded-full text-slate-400">0 tasks</span>
+              </div>
+              <div id="mytasks-admintasks-list" class="space-y-3 max-h-[500px] overflow-y-auto"></div>
+            </div>
           </div>
         </section>
 
-        <!-- Workflow / Monitor Tab (Super Admin Only) -->
-        <section id="tab-workflow" class="hidden space-y-6">
+        <!-- Workflow Tab -->
+        <section id="tab-workflow" class="space-y-6 hidden">
           <div class="flex justify-between items-center">
             <div>
-              <h2 class="text-lg font-bold">Workflow & Agent Monitoring</h2>
-              <p class="text-xs text-slate-400 mt-0.5">Monitor what every agent is currently working on and assign direct tasks.</p>
+              <h2 class="text-lg font-bold">Workflow & Agent Monitor</h2>
+              <p class="text-xs text-slate-400 mt-0.5">Monitor active agent workloads and assign direct tasks.</p>
             </div>
             <button onclick="openAssignTaskModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg font-medium text-sm transition flex items-center space-x-2">
               <i class="fa-solid fa-plus"></i><span>Assign New Task</span>
@@ -200,90 +245,146 @@
           </div>
         </section>
 
-        <!-- Master Call Codes Tab -->
-        <section id="tab-callcodes" class="hidden space-y-6">
-          <div class="flex justify-between items-center">
-            <h2 class="text-lg font-bold">Master Call Codes & Points Mapping</h2>
-            <input type="text" id="code-search" placeholder="Search call codes..." onkeyup="filterCallCodes()" class="bg-slate-800 border border-slate-700 px-4 py-2 rounded-lg text-sm w-72 focus:outline-none focus:border-indigo-500">
-          </div>
-          <div class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
-            <table class="w-full text-left border-collapse">
-              <thead>
-                <tr class="bg-slate-900 border-b border-slate-700 text-slate-400 text-xs uppercase">
-                  <th class="p-4">Call Code</th>
-                  <th class="p-4">Description</th>
-                  <th class="p-4">Assigned Points</th>
-                </tr>
-              </thead>
-              <tbody id="call-codes-table-body" class="divide-y divide-slate-700 text-sm"></tbody>
-            </table>
-          </div>
-        </section>
-
-        <!-- Tickets Tab -->
-        <section id="tab-tickets" class="hidden space-y-6">
-          <div class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
-            <table class="w-full text-left border-collapse text-sm">
-              <thead>
-                <tr class="bg-slate-900 border-b border-slate-700 text-slate-400 text-xs uppercase">
-                  <th class="p-3">Ticket ID</th>
-                  <th class="p-3">Date</th>
-                  <th class="p-3">Company Name</th>
-                  <th class="p-3">Customer / SPOC</th>
-                  <th class="p-3">Designation</th>
-                  <th class="p-3">Call Reason</th>
-                  <th class="p-3">Call Code</th>
-                  <th class="p-3">Points</th>
-                  <th class="p-3">Agent</th>
-                  <th class="p-3">Priority</th>
-                  <th class="p-3">Status</th>
-                  <th class="p-3">Aging Indicator</th>
-                </tr>
-              </thead>
-              <tbody id="tickets-table-body" class="divide-y divide-slate-700"></tbody>
-            </table>
+        <!-- Call Codes Tab -->
+        <section id="tab-callcodes" class="space-y-6 hidden">
+          <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+            <h3 class="text-lg font-semibold mb-4">Master Call Codes</h3>
+            <div id="callcodes-container"><p class="text-slate-400">Loading call codes...</p></div>
           </div>
         </section>
 
         <!-- Clients Directory Tab -->
-        <section id="tab-clients" class="hidden space-y-6">
-          <div class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
-            <table class="w-full text-left border-collapse text-sm">
-              <thead>
-                <tr class="bg-slate-900 border-b border-slate-700 text-slate-400 text-xs uppercase">
-                  <th class="p-4">Company</th>
-                  <th class="p-4">SPOC Name</th>
-                  <th class="p-4">Phone</th>
-                  <th class="p-4">Email</th>
-                  <th class="p-4">Designation</th>
-                  <th class="p-4">Products / Services</th>
-                </tr>
-              </thead>
-              <tbody id="clients-table-body" class="divide-y divide-slate-700"></tbody>
-            </table>
+        <section id="tab-clients" class="space-y-6 hidden">
+          <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+            <h3 class="text-lg font-semibold mb-4">Clients Directory</h3>
+            <div id="clients-container"><p class="text-slate-400">Loading clients...</p></div>
           </div>
         </section>
 
-        <!-- Users Directory Tab -->
-        <section id="tab-users" class="hidden space-y-6">
-          <div class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
-            <table class="w-full text-left border-collapse text-sm">
-              <thead>
-                <tr class="bg-slate-900 border-b border-slate-700 text-slate-400 text-xs uppercase">
-                  <th class="p-4">Name</th>
-                  <th class="p-4">Email</th>
-                  <th class="p-4">Phone</th>
-                  <th class="p-4">Role (Editable)</th>
-                  <th class="p-4">Status / Approval (Editable)</th>
-                </tr>
-              </thead>
-              <tbody id="users-table-body" class="divide-y divide-slate-700"></tbody>
-            </table>
+        <!-- Team Tab with Super Admin Role Management -->
+        <section id="tab-users" class="space-y-6 hidden">
+          <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-700 pb-4">
+              <div>
+                <h3 class="text-lg font-semibold text-slate-100 flex items-center space-x-2">
+                  <i class="fa-solid fa-users text-indigo-400"></i><span>Registered Team Members & Teams</span>
+                </h3>
+                <p class="text-xs text-slate-400 mt-1">Overview of all active users, their assigned teams, and system roles. Only Super Admins can update roles.</p>
+              </div>
+              <span id="team-member-count" class="bg-indigo-600/20 text-indigo-400 px-3 py-1 rounded-full text-xs font-semibold border border-indigo-500/30">0 Members</span>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-sm">
+                <thead class="bg-slate-900 text-slate-400 uppercase text-xs">
+                  <tr>
+                    <th class="p-4">Member Name</th>
+                    <th class="p-4">Email Address</th>
+                    <th class="p-4">Team</th>
+                    <th class="p-4">System Role</th>
+                    <th class="p-4 text-center">Status</th>
+                    <th class="p-4 text-center">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="users-container" class="divide-y divide-slate-700">
+                  <tr><td colspan="6" class="p-4 text-center text-slate-500">Loading registered team members...</td></tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </section>
 
       </div>
     </main>
+  </div>
+
+  <!-- Create Ticket Modal -->
+  <div id="create-ticket-modal" class="fixed inset-0 bg-black/70 flex items-center justify-center hidden z-50">
+    <div class="bg-slate-800 border border-slate-700 w-full max-w-2xl rounded-2xl p-6 space-y-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+        <h3 class="text-lg font-bold">Create New Ticket</h3>
+        <button onclick="closeCreateTicketModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+      <form onsubmit="submitNewTicket(event)" class="space-y-4 text-sm">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-slate-400 mb-1 text-xs">SPOC Company</label>
+            <input type="text" id="ticket-form-company" required placeholder="e.g. Kanto Gym" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1 text-xs">SPOC Name</label>
+            <input type="text" id="ticket-form-name" required placeholder="e.g. Ash Ketchum" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100">
+          </div>
+        </div>
+        <div class="grid grid-cols-3 gap-4">
+          <div>
+            <label class="block text-slate-400 mb-1 text-xs">SPOC Designation</label>
+            <input type="text" id="ticket-form-designation" placeholder="e.g. Manager" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1 text-xs">SPOC Email</label>
+            <input type="email" id="ticket-form-email" placeholder="e.g. name@example.com" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1 text-xs">SPOC Contact</label>
+            <input type="text" id="ticket-form-contact" required placeholder="9999999999" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-slate-400 mb-1 text-xs">Call Reason</label>
+            <select id="ticket-form-reason" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100"></select>
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1 text-xs">Call Description</label>
+            <select id="ticket-form-desc" required onchange="onCallDescriptionChange()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100">
+              <option value="">Select Description</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-slate-400 mb-1 text-xs">Call Code</label>
+            <input type="text" id="ticket-form-code" readonly placeholder="Auto-populated" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-slate-400 cursor-not-allowed">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1 text-xs">Call Points</label>
+            <input type="text" id="ticket-form-points" readonly placeholder="Auto-populated" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-slate-400 cursor-not-allowed">
+          </div>
+        </div>
+        <div class="grid grid-cols-3 gap-4">
+          <div>
+            <label class="block text-slate-400 mb-1 text-xs">Assign Agent</label>
+            <select id="ticket-form-agent" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100"></select>
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1 text-xs">Call Time (HH:MM:SS)</label>
+            <input type="text" id="ticket-form-calltime" required placeholder="00:05:30" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1 text-xs">Priority</label>
+            <select id="ticket-form-priority" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100">
+              <option value="Low" selected>Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-slate-400 mb-1 text-xs">Ticket Status</label>
+            <select id="ticket-form-status" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100"></select>
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1 text-xs">Payment Status</label>
+            <select id="ticket-form-payment" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100"></select>
+          </div>
+        </div>
+        <div class="flex justify-end space-x-3 pt-4 border-t border-slate-700">
+          <button type="button" onclick="closeCreateTicketModal()" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg font-medium">Cancel</button>
+          <button type="submit" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg font-medium text-white">Raise Ticket</button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <!-- Assign Task Modal (Super Admin) -->
@@ -328,656 +429,616 @@
     </div>
   </div>
 
-  <!-- Ticket Detail & Follow-Up Drawer Modal -->
-  <div id="ticket-drawer" class="fixed inset-0 bg-black/70 flex justify-end hidden z-50">
-    <div class="bg-slate-900 border-l border-slate-800 w-full max-w-5xl h-full flex flex-col shadow-2xl">
-      <div class="p-6 bg-slate-950 border-b border-slate-800 flex justify-between items-center">
-        <div class="flex items-center space-x-3">
-          <span id="drawer-ticket-id" class="font-mono text-indigo-400 font-bold text-lg">TICK-1001</span>
-          <span id="drawer-ticket-date" class="text-xs text-slate-400"></span>
-        </div>
-        <button onclick="closeTicketDrawer()" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800"><i class="fa-solid fa-xmark text-xl"></i></button>
-      </div>
-
-      <div class="flex-1 overflow-y-auto grid grid-cols-12 gap-6 p-6">
-        <div class="col-span-4 space-y-3 text-sm bg-slate-800/50 p-5 rounded-xl border border-slate-800">
-          <h3 class="font-bold text-indigo-400 uppercase text-xs tracking-wider border-b border-slate-700 pb-2">Client & Issue Info</h3>
-          <div>
-            <label class="text-slate-400 text-xs">Company Name</label>
-            <p id="drawer-company" class="font-semibold text-slate-200"></p>
-          </div>
-          <div>
-            <label class="text-slate-400 text-xs">Customer / SPOC</label>
-            <p id="drawer-name" class="font-semibold text-slate-200"></p>
-          </div>
-          <div class="grid grid-cols-2 gap-2">
-            <div>
-              <label class="text-slate-400 text-xs">Phone</label>
-              <p id="drawer-contact" class="text-slate-300"></p>
-            </div>
-            <div>
-              <label class="text-slate-400 text-xs">Email</label>
-              <p id="drawer-email" class="text-slate-300 truncate"></p>
-            </div>
-          </div>
-          <div>
-            <label class="text-slate-400 text-xs">Designation</label>
-            <p id="drawer-designation" class="text-slate-300"></p>
-          </div>
-          <div class="border-t border-slate-700 pt-3 space-y-2">
-            <div>
-              <label class="text-slate-400 text-xs">Product / Services</label>
-              <select id="drawer-product" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-100 text-xs mt-1"></select>
-            </div>
-            <div>
-              <label class="text-slate-400 text-xs">Call Code & Points</label>
-              <p class="text-emerald-400 font-bold mt-1"><span id="drawer-code"></span> (<span id="drawer-points"></span> pts)</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-span-4 space-y-3 text-sm bg-slate-800/50 p-5 rounded-xl border border-slate-800 flex flex-col justify-between">
-          <div class="space-y-3">
-            <h3 class="font-bold text-indigo-400 uppercase text-xs tracking-wider border-b border-slate-700 pb-2">Follow-up & Actions</h3>
-            <div>
-              <label class="block text-slate-400 text-xs mb-1">Call Reason</label>
-              <select id="drawer-call-reason" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-100 text-xs"></select>
-            </div>
-            <div>
-              <label class="block text-slate-400 text-xs mb-1">Status</label>
-              <select id="drawer-status" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-100 text-xs"></select>
-            </div>
-            <div>
-              <label class="block text-slate-400 text-xs mb-1">Payment Status</label>
-              <select id="drawer-payment-status" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-100 text-xs"></select>
-            </div>
-            <div>
-              <label class="block text-slate-400 text-xs mb-1">Priority</label>
-              <select id="drawer-priority" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-100 text-xs">
-                <option value="Low">Low</option>
-                <option value="Medium">Medium</option>
-                <option value="High">High</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-slate-400 text-xs mb-1">Assign Agent / Reassign</label>
-              <select id="drawer-agent" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-100 text-xs"></select>
-            </div>
-            <div>
-              <label class="block text-slate-400 text-xs mb-1">Call Description</label>
-              <select id="drawer-call-description" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-100 text-xs"></select>
-            </div>
-            <div>
-              <label class="block text-slate-400 text-xs mb-1">Follow-up Remark (Column O)</label>
-              <input type="text" id="drawer-followup-remark" placeholder="e.g. Client requested callback tomorrow" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-100 text-xs">
-            </div>
-          </div>
-          <button onclick="saveTicketUpdate()" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 rounded-lg font-semibold text-white text-xs transition shadow-lg">Save Changes & Log Activity</button>
-        </div>
-
-        <div class="col-span-4 space-y-4 text-sm bg-slate-800/50 p-5 rounded-xl border border-slate-800 flex flex-col">
-          <h3 class="font-bold text-indigo-400 uppercase text-xs tracking-wider border-b border-slate-700 pb-2">Activity & Timeline</h3>
-          <div id="drawer-timeline" class="flex-1 overflow-y-auto space-y-3 pr-2"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- New Ticket Modal -->
-  <div id="ticket-modal" class="fixed inset-0 bg-black/70 flex items-center justify-center hidden z-50">
-    <div class="bg-slate-800 border border-slate-700 w-full max-w-2xl rounded-2xl p-6 space-y-4 max-h-[90vh] overflow-y-auto">
+  <!-- Super Admin Edit Team & Role Modal -->
+  <div id="edit-member-modal" class="fixed inset-0 bg-black/70 flex items-center justify-center hidden z-50">
+    <div class="bg-slate-800 border border-slate-700 w-full max-w-md rounded-2xl p-6 space-y-4">
       <div class="flex justify-between items-center border-b border-slate-700 pb-3">
-        <h3 class="text-lg font-bold">Create New Support Ticket</h3>
-        <button onclick="closeNewTicketModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+        <h3 class="text-lg font-bold">Edit Team & Role</h3>
+        <button onclick="closeEditMemberModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
       </div>
-      <form id="ticket-form" onsubmit="submitTicket(event)" class="space-y-4 text-sm">
-        <div class="grid grid-cols-3 gap-4">
-          <div>
-            <label class="block text-slate-400 mb-1">Ticket ID</label>
-            <input type="text" id="form-ticket-id" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100" value="TICK-1002">
-          </div>
-          <div>
-            <label class="block text-slate-400 mb-1">Date</label>
-            <input type="date" id="form-date" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100">
-          </div>
-          <div>
-            <label class="block text-slate-400 mb-1">Company Name</label>
-            <input type="text" id="form-company" required placeholder="e.g. Acme Corp" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100">
-          </div>
+      <form onsubmit="saveMemberRoleChange(event)" class="space-y-4 text-sm">
+        <input type="hidden" id="edit-member-email">
+        <div>
+          <label class="block text-slate-400 mb-1">Member Name</label>
+          <input type="text" id="edit-member-name" readonly class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-slate-400 cursor-not-allowed">
         </div>
-        <div class="grid grid-cols-3 gap-4">
-          <div>
-            <label class="block text-slate-400 mb-1">Customer Name</label>
-            <input type="text" id="form-name" required placeholder="Full Name" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100">
-          </div>
-          <div>
-            <label class="block text-slate-400 mb-1">Email Address</label>
-            <input type="email" id="form-email" placeholder="name@example.com" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100">
-          </div>
-          <div>
-            <label class="block text-slate-400 mb-1">Designation</label>
-            <input type="text" id="form-designation" placeholder="e.g. Manager" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100">
-          </div>
+        <div>
+          <label class="block text-slate-400 mb-1">Team</label>
+          <select id="edit-member-team" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100"></select>
         </div>
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label class="block text-slate-400 mb-1">Contact Phone</label>
-            <input type="text" id="form-contact" required placeholder="9999999999" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100">
-          </div>
-          <div>
-            <label class="block text-slate-400 mb-1">Call Reason</label>
-            <select id="form-call-reason" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100"></select>
-          </div>
-        </div>
-        <div class="grid grid-cols-3 gap-4">
-          <div>
-            <label class="block text-slate-400 mb-1">Call Code</label>
-            <select id="form-call-code" onchange="updateCallPoints()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100"></select>
-          </div>
-          <div>
-            <label class="block text-slate-400 mb-1">Assigned Points</label>
-            <input type="text" id="form-call-points" readonly class="w-full bg-slate-900/50 border border-slate-700 rounded-lg p-2.5 text-indigo-400 font-bold">
-          </div>
-          <div>
-            <label class="block text-slate-400 mb-1">Assign Agent</label>
-            <select id="form-agent" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100"></select>
-          </div>
-        </div>
-        <div class="grid grid-cols-3 gap-4">
-          <div>
-            <label class="block text-slate-400 mb-1">Priority</label>
-            <select id="form-priority" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100">
-              <option value="Low">Low</option>
-              <option value="Medium" selected>Medium</option>
-              <option value="High">High</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-slate-400 mb-1">Status</label>
-            <select id="form-status" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100"></select>
-          </div>
-          <div>
-            <label class="block text-slate-400 mb-1">Payment Status</label>
-            <select id="form-payment-status" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100"></select>
-          </div>
-        </div>
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label class="block text-slate-400 mb-1">Product / Services</label>
-            <select id="form-product" onchange="checkNewProduct(this)" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100"></select>
-          </div>
-          <div>
-            <label class="block text-slate-400 mb-1">Call Description</label>
-            <select id="form-call-description" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100"></select>
-          </div>
+        <div>
+          <label class="block text-slate-400 mb-1">System Role</label>
+          <select id="edit-member-role" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100">
+            <option value="Super Admin">Super Admin</option>
+            <option value="Admin">Admin</option>
+            <option value="Agent">Agent</option>
+          </select>
         </div>
         <div class="flex justify-end space-x-3 pt-4 border-t border-slate-700">
-          <button type="button" onclick="closeNewTicketModal()" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg font-medium">Cancel</button>
-          <button type="submit" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg font-medium text-white">Save Ticket</button>
+          <button type="button" onclick="closeEditMemberModal()" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg font-medium">Cancel</button>
+          <button type="submit" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg font-medium text-white">Save Changes</button>
         </div>
       </form>
     </div>
   </div>
 
   <script>
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyLGmD3kAxijsZMPZJ6_CWWBTf6namdl4zZm1ggeqKJbvZuBPTpY7fHQhYUotD4zfNR/exec";
-    
     let CRM_DATA = {
-      callCodes: [],
-      dropdowns: { callReasons: [], statuses: [], paymentStatuses: [], callDescriptions: [] },
-      products: [],
-      users: [],
+      tickets: [
+        { "Created At": "26 Sep 2026, 04:47 PM", "Ticket ID": "TICK-1001", "SPOC Name": "Foxy", "SPOC Company": "Pokemon Go", "SPOC Contact": "9999999999", "Call Reason": "AMC PM", "Call Description": "Antivirus Calls", "Call Code": "AC", "Agent Assigned": "Jayesh Bhargav", "Status": "Work In progress", "Payment Status": "Not Applicable", "Priority": "Medium", "Call Time": "00:05:00" },
+        { "Created At": "01 Oct 2026, 10:00 AM", "Ticket ID": "TICK-1002", "SPOC Name": "Ash", "SPOC Company": "Kanto Gym", "SPOC Contact": "8888888888", "Call Reason": "Support Call", "Call Description": "Desktop PC call", "Call Code": "DT", "Agent Assigned": "Jayesh Bhargav", "Status": "Open", "Payment Status": "Pending", "Priority": "High", "Call Time": "00:10:00" }
+      ],
+      users: [
+        { "Name": "Jayesh Bhargav", "Email": "jayeshbhargav6000@gmail.com", "Role": "Super Admin", "Team": "Admin" },
+        { "Name": "Archita Parikh", "Email": "archita.s.parikh@gmail.com", "Role": "Super Admin", "Team": "Admin" }
+      ],
+      callCodes: [
+        { "Call Code": "AC", "Description": "Antivirus Calls", "Points": 1 },
+        { "Call Code": "DT", "Description": "Desktop PC call", "Points": 1 },
+        { "Call Code": "SR", "Description": "Software Renewal", "Points": 2 }
+      ],
+      dropdowns: {
+        callReasons: ["AMC PM", "Support Call", "Billing / Renewal", "General Inquiry"],
+        statuses: ["Open", "Work In progress", "Closed"],
+        paymentStatuses: ["Pending", "Done", "Not Applicable"],
+        teams: ["Sales", "Software", "Hardware", "HR", "Admin", "Engineer"],
+        roles: ["Super Admin", "Admin", "Agent"]
+      },
       clients: [],
-      tickets: [],
-      adminTasks: []
+      adminTasks: [
+        { "id": "TASK-501", "assignedTo": "Jayesh Bhargav", "title": "Review Weekly Reports", "description": "Check pending tickets and verify CRM logs.", "priority": "High", "dueDate": "2026-10-05", "completed": false }
+      ]
     };
 
-    let currentUser = { name: "Jayesh Bhargav", role: "Super Admin" };
-    let activeTicketId = null;
+    let currentUser = { name: "Jayesh Bhargav", role: "Super Admin", email: "jayeshbhargav6000@gmail.com" };
 
-    async function loadCRMData() {
-      try {
-        const response = await fetch(`${WEB_APP_URL}?action=getData`);
-        CRM_DATA = await response.json();
-        buildClientsFromTickets();
-        renderDashboard();
-      } catch (err) {
-        console.error("Error fetching CRM data:", err);
+    function switchTab(tabId) {
+      ['overview', 'tickets', 'mytasks', 'workflow', 'callcodes', 'clients', 'users'].forEach(t => {
+        const elem = document.getElementById(`tab-${t}`);
+        if (elem) elem.classList.add('hidden');
+        const nav = document.getElementById(`nav-${t}`);
+        if (nav) {
+          nav.classList.remove('bg-indigo-600', 'text-white');
+          nav.classList.add('text-slate-400', 'hover:bg-slate-900', 'hover:text-white');
+        }
+      });
+
+      const targetTab = document.getElementById(`tab-${tabId}`);
+      if (targetTab) targetTab.classList.remove('hidden');
+
+      const targetNav = document.getElementById(`nav-${tabId}`);
+      if (targetNav) {
+        targetNav.classList.add('bg-indigo-600', 'text-white');
+        targetNav.classList.remove('text-slate-400', 'hover:bg-slate-900', 'hover:text-white');
+      }
+
+      const titles = { 
+        overview: 'Dashboard', 
+        tickets: 'Tickets', 
+        mytasks: 'My Tasks & Assigned Tickets',
+        workflow: 'Workflow & Agent Monitoring',
+        callcodes: 'Master Call Codes & Points', 
+        clients: 'Clients Directory', 
+        users: 'Team Directory' 
+      };
+      document.getElementById('page-title').innerText = titles[tabId] || 'Dashboard';
+    }
+
+    function loadAppData() {
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        google.script.run
+          .withSuccessHandler(function(response) {
+            if (response && response.success) {
+              CRM_DATA.tickets = response.tickets || CRM_DATA.tickets;
+              CRM_DATA.users = response.users || CRM_DATA.users;
+              CRM_DATA.callCodes = response.callCodes || CRM_DATA.callCodes;
+              CRM_DATA.clients = response.clients || CRM_DATA.clients;
+              CRM_DATA.adminTasks = response.adminTasks || CRM_DATA.adminTasks;
+              if (response.dropdowns) {
+                CRM_DATA.dropdowns = response.dropdowns;
+              }
+              if (response.teams && response.teams.length > 0) {
+                CRM_DATA.dropdowns.teams = response.teams;
+              }
+              renderAll();
+            }
+          })
+          .getAppData();
+      } else {
+        renderAll();
       }
     }
 
-    function buildClientsFromTickets() {
-      const clientMap = new Map();
-      CRM_DATA.tickets.forEach(t => {
-        const company = t["Company"] || "Unknown Company";
-        if (!clientMap.has(company)) {
-          clientMap.set(company, {
-            "Company": company,
-            "SPOC Name": t["Name"] || "",
-            "SPOC Phone": t["Contact"] || "",
-            "SPOC Email": t["Email"] || "",
-            "SPOC Designation": t["Designation"] || "",
-            "Product / Services": t["Products / Services (multi Checkbox with Option to add products to the list)"] || t["Product / Services"] || ""
-          });
+    function renderAll() {
+      renderDashboard();
+      renderTicketsTable();
+      renderMyTasks();
+      renderWorkflowMonitor();
+      renderTeamDirectory();
+    }
+
+    function renderTeamDirectory() {
+      const container = document.getElementById("users-container");
+      const users = CRM_DATA.users || [];
+      const countElem = document.getElementById("team-member-count");
+      const isSuperAdmin = (currentUser.role || "").toLowerCase() === "super admin";
+
+      if (countElem) {
+        countElem.innerText = `${users.length} Member${users.length === 1 ? '' : 's'}`;
+      }
+
+      if (!users.length) {
+        container.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-500">No registered team members found.</td></tr>`;
+        return;
+      }
+
+      container.innerHTML = users.map(u => {
+        const name = u["Name"] || u.name || "N/A";
+        const email = u["Email"] || u.email || "N/A";
+        const role = u["Role"] || u.role || "Agent";
+        const team = u["Team"] || u.team || "Unassigned";
+
+        return `
+          <tr class="hover:bg-slate-800/50 transition">
+            <td class="p-4 font-bold text-slate-100 flex items-center space-x-3">
+              <div class="w-8 h-8 rounded-full bg-indigo-600/30 text-indigo-400 font-bold flex items-center justify-center text-xs border border-indigo-500/20">
+                ${name.charAt(0).toUpperCase()}
+              </div>
+              <span>${name}</span>
+            </td>
+            <td class="p-4 text-slate-300 font-mono text-xs">${email}</td>
+            <td class="p-4">
+              <span class="px-2.5 py-1 rounded-md text-xs font-semibold bg-slate-700/50 text-slate-200 border border-slate-600">
+                ${team}
+              </span>
+            </td>
+            <td class="p-4">
+              <span class="px-2.5 py-1 rounded-md text-xs font-semibold ${role.toLowerCase().includes('admin') ? 'bg-purple-500/10 text-purple-400 border border-purple-500/20' : 'bg-sky-500/10 text-sky-400 border border-sky-500/20'}">
+                ${role}
+              </span>
+            </td>
+            <td class="p-4 text-center">
+              <span class="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>Active</span>
+              </span>
+            </td>
+            <td class="p-4 text-center">
+              ${isSuperAdmin ? `
+                <button onclick="openEditMemberModal('${email}')" class="text-xs bg-indigo-600/20 hover:bg-indigo-600/40 text-indigo-300 border border-indigo-500/30 px-3 py-1 rounded-lg transition flex items-center space-x-1 mx-auto">
+                  <i class="fa-solid fa-pen-to-square"></i><span>Edit</span>
+                </button>
+              ` : `
+                <span class="text-xs text-slate-500 font-medium cursor-not-allowed" title="Edits restricted to Super Admin"><i class="fa-solid fa-lock text-xs"></i> Locked</span>
+              `}
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function openEditMemberModal(email) {
+      const user = (CRM_DATA.users || []).find(u => (u.Email || u.email) === email);
+      if (!user) return;
+
+      document.getElementById("edit-member-email").value = email;
+      document.getElementById("edit-member-name").value = user.Name || user.name || "";
+
+      const teamSelect = document.getElementById("edit-member-team");
+      const teamList = (CRM_DATA.dropdowns && CRM_DATA.dropdowns.teams) || ["Sales", "Software", "Hardware", "HR", "Admin", "Engineer"];
+      teamSelect.innerHTML = teamList.map(t => `<option value="${t}">${t}</option>`).join("");
+      teamSelect.value = user.Team || user.team || teamList[0];
+
+      document.getElementById("edit-member-role").value = user.Role || user.role || "Agent";
+
+      document.getElementById("edit-member-modal").classList.remove("hidden");
+    }
+
+    function closeEditMemberModal() {
+      document.getElementById("edit-member-modal").classList.add("hidden");
+    }
+
+    function saveMemberRoleChange(event) {
+      event.preventDefault();
+      const email = document.getElementById("edit-member-email").value;
+      const newTeam = document.getElementById("edit-member-team").value;
+      const newRole = document.getElementById("edit-member-role").value;
+
+      const user = (CRM_DATA.users || []).find(u => (u.Email || u.email) === email);
+      if (user) {
+        user.Team = newTeam;
+        user.team = newTeam;
+        user.Role = newRole;
+        user.role = newRole;
+        renderAll();
+        closeEditMemberModal();
+
+        if (typeof google !== 'undefined' && google.script && google.script.run) {
+          google.script.run.updateUserTeamAndRole(email, newTeam, newRole);
         }
-      });
-      if (!CRM_DATA.clients || CRM_DATA.clients.length === 0) {
-        CRM_DATA.clients = Array.from(clientMap.values());
+
+        alert(`Updated ${user.Name || user.name}'s Team to ${newTeam} and Role to ${newRole}!`);
       }
     }
 
     function renderDashboard() {
+      const tickets = CRM_DATA.tickets || [];
+      const users = CRM_DATA.users || [];
+      const adminTasks = CRM_DATA.adminTasks || [];
       const todayStr = new Date().toISOString().split('T')[0];
 
-      const totalTickets = CRM_DATA.tickets.length;
-      const openTickets = CRM_DATA.tickets.filter(t => {
-        const s = (t["Status"] || "").toLowerCase();
-        return s.includes("open") || s.includes("pending") || s.includes("progress");
-      }).length;
+      let totalTickets = tickets.length;
+      let freshOpen = 0;
+      let freshClosed = 0;
+      let paymentPending = 0;
+      let paymentDoneToday = 0;
+      let priorityLow = 0;
+      let priorityMed = 0;
+      let priorityHigh = 0;
 
-      const freshTickets = CRM_DATA.tickets.filter(t => (t["Date"] || "").startsWith(todayStr)).length;
-      
-      const closedToday = CRM_DATA.tickets.filter(t => {
-        const s = (t["Status"] || "").toLowerCase();
-        const isClosed = s.includes("closed") || s.includes("resolved") || s.includes("done");
-        const timestamp = t["Remarks (with time & date)"] || t["Timestamp"] || t["Date"] || "";
-        return isClosed && (timestamp.includes(todayStr.split('-').reverse().join('-')) || timestamp.startsWith(todayStr));
-      }).length;
+      tickets.forEach(t => {
+        const ticketDate = (t["Created At"] || t["Date"] || "").split('T')[0];
+        const status = (t["Status"] || "").trim().toLowerCase();
+        const payStatus = (t["Payment Status"] || "").trim().toLowerCase();
+        const priority = (t["Priority"] || "").trim().toLowerCase();
 
-      const paymentDone = CRM_DATA.tickets.filter(t => (t["Payment Status"] || "").toLowerCase() === "done").length;
-      const paymentAwaited = CRM_DATA.tickets.filter(t => {
-        const p = (t["Payment Status"] || "").toLowerCase();
-        return p !== "done" && p !== "not applicable";
-      }).length;
+        if (ticketDate.includes(todayStr) && status !== "closed") freshOpen++;
+        if (status === "closed") freshClosed++;
+        if (payStatus === "pending") paymentPending++;
+        if (payStatus === "done") paymentDoneToday++;
 
-      const mediumPriority = CRM_DATA.tickets.filter(t => (t["Priority"] || "").toLowerCase() === "medium").length;
-      const highPriority = CRM_DATA.tickets.filter(t => (t["Priority"] || "").toLowerCase() === "high").length;
+        if (priority === "low") priorityLow++;
+        else if (priority === "medium") priorityMed++;
+        else if (priority === "high") priorityHigh++;
+      });
 
       document.getElementById("stat-total-tickets").innerText = totalTickets;
-      document.getElementById("stat-open-tickets").innerText = openTickets;
-      document.getElementById("stat-fresh-tickets").innerText = freshTickets;
-      document.getElementById("stat-closed-today").innerText = closedToday;
-      document.getElementById("stat-payment-done").innerText = paymentDone;
-      document.getElementById("stat-payment-awaited").innerText = paymentAwaited;
-      document.getElementById("stat-med-priority").innerText = mediumPriority;
-      document.getElementById("stat-high-priority").innerText = highPriority;
+      document.getElementById("stat-fresh-open").innerText = freshOpen;
+      document.getElementById("stat-fresh-closed").innerText = freshClosed;
+      document.getElementById("stat-payment-pending").innerText = paymentPending;
+      document.getElementById("stat-payment-done-today").innerText = paymentDoneToday;
+      document.getElementById("stat-priority-low").innerText = priorityLow;
+      document.getElementById("stat-priority-med").innerText = priorityMed;
+      document.getElementById("stat-priority-high").innerText = priorityHigh;
 
-      renderMyTasks();
-      renderWorkflowMonitor();
-
-      document.getElementById("call-codes-table-body").innerHTML = CRM_DATA.callCodes.map(c => `
-        <tr class="hover:bg-slate-750">
-          <td class="p-4 font-mono text-indigo-400 font-semibold">${c["Call Code"] || ""}</td>
-          <td class="p-4">${c["Description"] || ""}</td>
-          <td class="p-4 text-emerald-400 font-bold">+${c["Points"] || 0} pts</td>
-        </tr>
-      `).join("");
-
-      document.getElementById("clients-table-body").innerHTML = CRM_DATA.clients.length ? CRM_DATA.clients.map(cl => `
-        <tr class="hover:bg-slate-750">
-          <td class="p-4 font-semibold text-slate-100">${cl["Company"] || ""}</td>
-          <td class="p-4">${cl["SPOC Name"] || ""}</td>
-          <td class="p-4">${cl["SPOC Phone"] || ""}</td>
-          <td class="p-4 text-slate-400">${cl["SPOC Email"] || ""}</td>
-          <td class="p-4 text-indigo-300">${cl["SPOC Designation"] || ""}</td>
-          <td class="p-4">${cl["Product / Services"] || ""}</td>
-        </tr>
-      `).join("") : `<tr><td colspan="6" class="p-6 text-center text-slate-500">No clients found.</td></tr>`;
-
-      document.getElementById("users-table-body").innerHTML = CRM_DATA.users.map((u, idx) => {
-        const userName = (u["Name"] || "").trim().toLowerCase();
-        const isSuperAdminUser = userName.includes("jayesh") || userName.includes("archita");
-
-        let roleOptionsHTML = "";
-        if (isSuperAdminUser) {
-          roleOptionsHTML = `<option value="Super Admin" selected>Super Admin</option>`;
-        } else {
-          roleOptionsHTML = `
-            <option value="Admin" ${u["Role"] === "Admin" ? "selected" : ""}>Admin</option>
-            <option value="Agent" ${u["Role"] === "Agent" || !u["Role"] ? "selected" : ""}>Agent</option>
+      const agentTicketsBody = document.getElementById("dashboard-agent-tickets");
+      if (!users.length) {
+        agentTicketsBody.innerHTML = `<tr><td colspan="4" class="p-3 text-center text-slate-500">No users found.</td></tr>`;
+      } else {
+        agentTicketsBody.innerHTML = users.map(u => {
+          const userName = u["Name"] || u.name || "";
+          const userRole = u["Role"] || u.role || "";
+          const userTickets = tickets.filter(t => (t["Agent Assigned"] || "").toLowerCase() === userName.toLowerCase());
+          const pendingCount = userTickets.filter(t => (t["Status"] || "").toLowerCase() !== "closed").length;
+          const totalCount = userTickets.length;
+          return `
+            <tr class="hover:bg-slate-900 transition">
+              <td class="p-3 font-bold text-slate-200">${userName}</td>
+              <td class="p-3 text-indigo-400">${userRole}</td>
+              <td class="p-3 text-center"><span class="px-2 py-0.5 rounded text-xs bg-sky-500/10 text-sky-400 font-semibold">${pendingCount}</span></td>
+              <td class="p-3 text-center font-semibold text-slate-300">${totalCount}</td>
+            </tr>
           `;
-        }
+        }).join("");
+      }
 
-        const statusVal = u["Status"] || "Pending";
-        const statusOptionsHTML = `
-          <option value="Approved" ${statusVal === "Approved" ? "selected" : ""}>Approved</option>
-          <option value="Pending" ${statusVal === "Pending" ? "selected" : ""}>Pending</option>
-          <option value="Rejected" ${statusVal === "Rejected" ? "selected" : ""}>Rejected</option>
-        `;
+      const agentTasksBody = document.getElementById("dashboard-agent-tasks");
+      if (!users.length) {
+        agentTasksBody.innerHTML = `<tr><td colspan="4" class="p-3 text-center text-slate-500">No users found.</td></tr>`;
+      } else {
+        agentTasksBody.innerHTML = users.map(u => {
+          const userName = u["Name"] || u.name || "";
+          const userRole = u["Role"] || u.role || "";
+          const userTasks = adminTasks.filter(task => (task.assignedTo || "").toLowerCase() === userName.toLowerCase());
+          const activeCount = userTasks.filter(task => !task.completed).length;
+          const completedCount = userTasks.filter(task => task.completed).length;
+          return `
+            <tr class="hover:bg-slate-900 transition">
+              <td class="p-3 font-bold text-slate-200">${userName}</td>
+              <td class="p-3 text-purple-400">${userRole}</td>
+              <td class="p-3 text-center"><span class="px-2 py-0.5 rounded text-xs bg-amber-500/10 text-amber-400 font-semibold">${activeCount}</span></td>
+              <td class="p-3 text-center"><span class="px-2 py-0.5 rounded text-xs bg-emerald-500/10 text-emerald-400 font-semibold">${completedCount}</span></td>
+            </tr>
+          `;
+        }).join("");
+      }
+    }
+
+    function renderTicketsTable() {
+      const tbody = document.getElementById("tickets-table-body");
+      if (!CRM_DATA.tickets.length) {
+        tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-slate-500">No tickets found.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = CRM_DATA.tickets.map(t => {
+        const ticketId = t["Ticket ID"] || "";
+        const createdAt = t["Created At"] || t["Date"] || "";
+        const company = t["SPOC Company"] || t["Company"] || "";
+        const spocName = t["SPOC Name"] || t["Name"] || "";
+        const callReason = t["Call Reason"] || "";
+        const agent = t["Agent Assigned"] || "";
+        const status = t["Status"] || "Open";
+        const priority = t["Priority"] || "Low";
 
         return `
-          <tr class="hover:bg-slate-750">
-            <td class="p-4 font-semibold">${u["Name"] || ""}</td>
-            <td class="p-4 text-slate-400">${u["Email"] || ""}</td>
-            <td class="p-4">${u["Phone"] || ""}</td>
+          <tr class="hover:bg-slate-800 transition">
+            <td class="p-4 font-mono text-indigo-400 font-bold">${ticketId}</td>
+            <td class="p-4 text-slate-300">${createdAt}</td>
+            <td class="p-4 text-slate-200">${company} (${spocName})</td>
+            <td class="p-4 text-slate-300">${callReason}</td>
+            <td class="p-4 text-slate-300">${agent}</td>
             <td class="p-4">
-              <select onchange="updateUserRole(${idx}, this.value)" class="bg-slate-900 border border-slate-700 rounded px-2 py-1 text-indigo-300 text-xs focus:outline-none focus:border-indigo-500">
-                ${roleOptionsHTML}
+              <select onchange="updateTicketStatus('${ticketId}', this.value)" class="bg-slate-900 border border-slate-700 text-xs rounded p-1.5 text-slate-200">
+                <option value="Open" ${status === 'Open' ? 'selected' : ''}>Open</option>
+                <option value="Work In progress" ${status === 'Work In progress' ? 'selected' : ''}>Work In progress</option>
+                <option value="Closed" ${status === 'Closed' ? 'selected' : ''}>Closed</option>
               </select>
             </td>
+            <td class="p-4"><span class="px-2 py-0.5 rounded text-xs ${priority === 'High' ? 'bg-rose-500/10 text-rose-400' : 'bg-blue-500/10 text-blue-400'}">${priority}</span></td>
             <td class="p-4">
-              <select onchange="updateUserStatus(${idx}, this.value)" class="bg-slate-900 border border-slate-700 rounded px-2 py-1 text-xs focus:outline-none focus:border-indigo-500 ${statusVal === 'Approved' ? 'text-emerald-400' : 'text-amber-400'}">
-                ${statusOptionsHTML}
-              </select>
+              <button onclick="markTicketInProgress('${ticketId}')" class="text-xs bg-indigo-600 hover:bg-indigo-500 text-white px-2.5 py-1 rounded">Work On</button>
             </td>
           </tr>
         `;
       }).join("");
-
-      document.getElementById("tickets-table-body").innerHTML = CRM_DATA.tickets.length ? CRM_DATA.tickets.map(t => {
-        return `
-          <tr class="hover:bg-slate-750/60 cursor-pointer transition" onclick="openTicketDrawer('${t["Ticket ID"]}')">
-            <td class="p-3 font-mono text-indigo-400 font-bold hover:underline">${t["Ticket ID"] || ""}</td>
-            <td class="p-3">${t["Date"] || ""}</td>
-            <td class="p-3 font-bold text-slate-100">${t["Company"] || ""}</td>
-            <td class="p-3">${t["Name"] || ""}</td>
-            <td class="p-3 text-indigo-300">${t["Designation"] || ""}</td>
-            <td class="p-3">${t["Call Reason"] || ""}</td>
-            <td class="p-3 font-mono">${t["Call Code"] || ""}</td>
-            <td class="p-3 text-emerald-400 font-bold">+${t["Call Points"] || 0}</td>
-            <td class="p-3 text-slate-300">${t["Agent Assigned"] || ""}</td>
-            <td class="p-3"><span class="px-2 py-0.5 rounded text-xs font-semibold ${t["Priority"] === 'High' ? 'bg-rose-500/10 text-rose-400' : 'bg-blue-500/10 text-blue-400'}">${t["Priority"] || "Medium"}</span></td>
-            <td class="p-3">${t["Status"] || ""}</td>
-            <td class="p-3"><span class="px-2.5 py-1 rounded text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Active</span></td>
-          </tr>
-        `;
-      }).join("") : `<tr><td colspan="12" class="p-6 text-center text-slate-500">No tickets logged yet.</td></tr>`;
-
-      populateGlobalDropdowns();
     }
 
-    async function updateUserRole(index, newRole) {
-      const user = CRM_DATA.users[index];
-      user["Role"] = newRole;
-      
-      await fetch(WEB_APP_URL, {
-        method: "POST",
-        body: JSON.stringify({ 
-          sheetName: "Users_Directory", 
-          action: "updateUser", 
-          email: user["Email"], 
-          fields: { "Role": newRole } 
-        })
-      });
-      alert(`Role for ${user["Name"]} updated to ${newRole}!`);
-      loadCRMData();
+    function updateTicketStatus(ticketId, newStatus) {
+      const ticket = CRM_DATA.tickets.find(t => t["Ticket ID"] === ticketId);
+      if (ticket) {
+        ticket["Status"] = newStatus;
+        renderAll();
+      }
     }
 
-    async function updateUserStatus(index, newStatus) {
-      const user = CRM_DATA.users[index];
-      user["Status"] = newStatus;
-      
-      await fetch(WEB_APP_URL, {
-        method: "POST",
-        body: JSON.stringify({ 
-          sheetName: "Users_Directory", 
-          action: "updateUser", 
-          email: user["Email"], 
-          fields: { "Status": newStatus } 
-        })
-      });
-      alert(`Status for ${user["Name"]} updated to ${newStatus}!`);
-      loadCRMData();
+    function markTicketInProgress(ticketId) {
+      const ticket = CRM_DATA.tickets.find(t => t["Ticket ID"] === ticketId);
+      if (ticket) {
+        ticket["Agent Assigned"] = currentUser.name;
+        ticket["Status"] = "Work In progress";
+        renderAll();
+        switchTab('mytasks');
+      }
+    }
+
+    function toggleAdminTask(taskId) {
+      const task = CRM_DATA.adminTasks.find(t => t.id === taskId);
+      if (task) {
+        task.completed = !task.completed;
+        renderMyTasks();
+      }
     }
 
     function renderMyTasks() {
-      const myTickets = CRM_DATA.tickets.filter(t => (t["Agent Assigned"] || "").toLowerCase() === currentUser.name.toLowerCase());
-      const myAdminTasks = (CRM_DATA.adminTasks || []).filter(task => task.assignedTo.toLowerCase() === currentUser.name.toLowerCase());
-
-      let html = "";
-      myTickets.forEach(t => {
-        html += `
-          <tr class="hover:bg-slate-750/60 cursor-pointer transition" onclick="openTicketDrawer('${t["Ticket ID"]}')">
-            <td class="p-4 font-mono text-indigo-400 font-bold">${t["Ticket ID"]}</td>
-            <td class="p-4"><span class="px-2.5 py-0.5 rounded text-xs bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">Support Ticket</span></td>
-            <td class="p-4 font-semibold text-slate-200">${t["Company"]} (${t["Name"]})</td>
-            <td class="p-4 text-slate-300">${t["Call Reason"]} - ${t["Call Description"] || 'No description'}</td>
-            <td class="p-4"><span class="px-2 py-0.5 rounded text-xs font-semibold ${t["Priority"] === 'High' ? 'bg-rose-500/10 text-rose-400' : 'bg-blue-500/10 text-blue-400'}">${t["Priority"] || "Medium"}</span></td>
-            <td class="p-4 text-amber-400 font-medium">${t["Status"]}</td>
-          </tr>
-        `;
+      const ticketsContainer = document.getElementById("mytasks-tickets-list");
+      const myPendingTickets = CRM_DATA.tickets.filter(t => {
+        const isAssignedToMe = (t["Agent Assigned"] || "").toLowerCase() === currentUser.name.toLowerCase();
+        const status = (t["Status"] || "").trim().toLowerCase();
+        return isAssignedToMe && status !== "closed";
       });
 
-      myAdminTasks.forEach(task => {
-        html += `
-          <tr class="hover:bg-slate-750/65">
-            <td class="p-4 font-mono text-purple-400 font-bold">${task.id}</td>
-            <td class="p-4"><span class="px-2.5 py-0.5 rounded text-xs bg-purple-500/10 text-purple-400 border border-purple-500/20">Admin Task</span></td>
-            <td class="p-4 font-semibold text-slate-200">Super Admin Assignment</td>
-            <td class="p-4 text-slate-300"><b>${task.title}</b>: ${task.description} (Due: ${task.dueDate})</td>
-            <td class="p-4"><span class="px-2 py-0.5 rounded text-xs font-semibold ${task.priority === 'High' ? 'bg-rose-500/10 text-rose-400' : 'bg-blue-500/10 text-blue-400'}">${task.priority}</span></td>
-            <td class="p-4 text-emerald-400 font-medium">Assigned</td>
-          </tr>
-        `;
-      });
+      document.getElementById("pending-ticket-count").innerText = `${myPendingTickets.length} pending`;
 
-      if (!html) {
-        html = `<tr><td colspan="6" class="p-6 text-center text-slate-500">No tasks or tickets currently assigned to you.</td></tr>`;
+      if (!myPendingTickets.length) {
+        ticketsContainer.innerHTML = `<div class="p-4 text-center text-slate-500 bg-slate-900 rounded-lg text-xs">No pending assigned tickets.</div>`;
+      } else {
+        ticketsContainer.innerHTML = myPendingTickets.map(t => {
+          const ticketId = t["Ticket ID"];
+          const company = t["SPOC Company"] || t["Company"] || "";
+          const spocName = t["SPOC Name"] || t["Name"] || "";
+          const callReason = t["Call Reason"] || "";
+          const callDesc = t["Call Description"] || 'No description';
+          const priority = t["Priority"] || "Low";
+          const status = t["Status"] || "Open";
+
+          return `
+            <div class="bg-slate-900 p-3.5 rounded-lg border border-slate-700 space-y-2 text-xs">
+              <div class="flex justify-between items-center">
+                <span class="font-mono font-bold text-indigo-400">${ticketId}</span>
+                <span class="px-2 py-0.5 rounded bg-sky-500/10 text-sky-400 font-medium">${status}</span>
+              </div>
+              <div>
+                <p class="font-semibold text-slate-200 text-sm">${company} (${spocName})</p>
+                <p class="text-slate-400">${callReason} - ${callDesc}</p>
+              </div>
+              <div class="flex justify-between items-center pt-1 border-t border-slate-800 text-slate-400">
+                <span>Priority: <strong class="${priority === 'High' ? 'text-rose-400' : 'text-blue-400'}">${priority}</strong></span>
+                <button onclick="updateTicketStatus('${ticketId}', 'Closed'); renderAll();" class="text-emerald-400 hover:underline">Mark Closed</button>
+              </div>
+            </div>
+          `;
+        }).join("");
       }
 
-      document.getElementById("my-tasks-table-body").innerHTML = html;
+      const adminTasksContainer = document.getElementById("mytasks-admintasks-list");
+      const myAdminTasks = (CRM_DATA.adminTasks || []).filter(task => (task.assignedTo || "").toLowerCase() === currentUser.name.toLowerCase());
+
+      document.getElementById("admin-task-count").innerText = `${myAdminTasks.filter(t => !t.completed).length} active`;
+
+      if (!myAdminTasks.length) {
+        adminTasksContainer.innerHTML = `<div class="p-4 text-center text-slate-500 bg-slate-900 rounded-lg text-xs">No direct tasks assigned by Admin.</div>`;
+      } else {
+        adminTasksContainer.innerHTML = myAdminTasks.map(task => `
+          <div class="bg-slate-900 p-3.5 rounded-lg border border-slate-700 space-y-2 text-xs ${task.completed ? 'opacity-50' : ''}">
+            <div class="flex items-start justify-between">
+              <label class="flex items-start space-x-3 cursor-pointer">
+                <input type="checkbox" ${task.completed ? 'checked' : ''} onchange="toggleAdminTask('${task.id}')" class="mt-0.5 rounded bg-slate-800 border-slate-700 text-indigo-600 focus:ring-indigo-500 w-4 h-4">
+                <div>
+                  <span class="font-bold text-slate-200 text-sm ${task.completed ? 'line-through text-slate-500' : ''}">${task.title}</span>
+                  <p class="text-slate-400 mt-0.5">${task.description}</p>
+                </div>
+              </label>
+              <span class="px-2 py-0.5 rounded text-[10px] font-semibold ${task.priority === 'High' ? 'bg-rose-500/10 text-rose-400' : 'bg-blue-500/10 text-blue-400'}">${task.priority}</span>
+            </div>
+            <div class="flex justify-between items-center text-[11px] text-slate-400 pt-1 border-t border-slate-800">
+              <span class="font-mono text-purple-400">${task.id}</span>
+              <span>Due: ${task.dueDate}</span>
+            </div>
+          </div>
+        `).join("");
+      }
     }
 
     function renderWorkflowMonitor() {
-      if (currentUser.role !== "Super Admin") return;
-
       const agentListContainer = document.getElementById("workflow-agent-list");
-      agentListContainer.innerHTML = (CRM_DATA.users || []).map(u => {
-        const assignedTicketsCount = CRM_DATA.tickets.filter(t => (t["Agent Assigned"] || "").toLowerCase() === u["Name"].toLowerCase()).length;
-        const assignedTasksCount = (CRM_DATA.adminTasks || []).filter(task => task.assignedTo.toLowerCase() === u["Name"].toLowerCase()).length;
-        return `
-          <div class="bg-slate-900 p-3 rounded-lg border border-slate-700 flex justify-between items-center text-xs">
-            <div>
-              <p class="font-bold text-slate-200">${u["Name"]}</p>
-              <p class="text-indigo-400">${u["Role"]}</p>
+      const users = CRM_DATA.users || [];
+
+      if (!users.length) {
+        agentListContainer.innerHTML = `<p class="text-slate-400 text-xs">No users found.</p>`;
+      } else {
+        agentListContainer.innerHTML = users.map(u => {
+          const userName = u["Name"] || u.name || "";
+          const userRole = u["Role"] || u.role || "";
+          const assignedTicketsCount = CRM_DATA.tickets.filter(t => (t["Agent Assigned"] || "").toLowerCase() === userName.toLowerCase() && (t["Status"] || "").toLowerCase() !== "closed").length;
+          const assignedTasksCount = (CRM_DATA.adminTasks || []).filter(task => (task.assignedTo || "").toLowerCase() === userName.toLowerCase() && !task.completed).length;
+          return `
+            <div class="bg-slate-900 p-3 rounded-lg border border-slate-700 flex justify-between items-center text-xs">
+              <div>
+                <p class="font-bold text-slate-200">${userName}</p>
+                <p class="text-indigo-400">${userRole}</p>
+              </div>
+              <div class="text-right space-x-2">
+                <span class="px-2 py-1 rounded bg-sky-500/10 text-sky-300 border border-sky-500/20">${assignedTicketsCount} Pending Tickets</span>
+                <span class="px-2 py-1 rounded bg-purple-500/10 text-purple-300 border border-purple-500/20">${assignedTasksCount} Admin Tasks</span>
+              </div>
             </div>
-            <div class="text-right space-x-2">
-              <span class="px-2 py-1 rounded bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">${assignedTicketsCount} Tickets</span>
-              <span class="px-2 py-1 rounded bg-purple-500/10 text-purple-300 border border-purple-500/20">${assignedTasksCount} Admin Tasks</span>
-            </div>
-          </div>
-        `;
-      }).join("");
+          `;
+        }).join("");
+      }
 
       const adminTasksContainer = document.getElementById("workflow-admin-tasks");
-      adminTasksContainer.innerHTML = (CRM_DATA.adminTasks || []).length ? (CRM_DATA.adminTasks || []).map(task => `
-        <div class="bg-slate-900 p-3 rounded-lg border border-slate-700 space-y-1 text-xs">
-          <div class="flex justify-between items-center">
-            <span class="font-bold text-indigo-300">${task.title}</span>
-            <span class="text-slate-400">Due: ${task.dueDate}</span>
+      const adminTasks = CRM_DATA.adminTasks || [];
+      if (!adminTasks.length) {
+        adminTasksContainer.innerHTML = `<p class="text-slate-400 text-xs">No admin tasks assigned.</p>`;
+      } else {
+        adminTasksContainer.innerHTML = adminTasks.map(task => `
+          <div class="bg-slate-900 p-3 rounded-lg border border-slate-700 space-y-1 text-xs ${task.completed ? 'opacity-50' : ''}">
+            <div class="flex justify-between items-center">
+              <span class="font-bold text-indigo-300 ${task.completed ? 'line-through text-slate-500' : ''}">${task.title || ""}</span>
+              <span class="text-slate-400">Due: ${task.dueDate || ""}</span>
+            </div>
+            <p class="text-slate-300">${task.description || ""}</p>
+            <p class="text-xs text-emerald-400">Assigned To: <b>${task.assignedTo || ""}</b> (${task.priority || "Medium"} Priority) ${task.completed ? '<span class="text-slate-500">[Completed]</span>' : ''}</p>
           </div>
-          <p class="text-slate-300">${task.description}</p>
-          <p class="text-xs text-emerald-400">Assigned To: <b>${task.assignedTo}</b> (${task.priority} Priority)</p>
-        </div>
-      `).join("") : `<p class="text-slate-500 text-xs text-center py-4">No direct tasks assigned yet.</p>`;
-    }
-
-    function getAvailableCallDescriptions() {
-      return CRM_DATA.dropdowns.callDescriptions || CRM_DATA.dropdowns.callDescription || CRM_DATA.dropdowns.descriptions || ["General Inquiry", "Support", "Billing", "Follow-up", "Feedback"];
-    }
-
-    function populateGlobalDropdowns() {
-      const callReasonHTML = (CRM_DATA.dropdowns.callReasons || []).map(r => `<option value="${r}">${r}</option>`).join("");
-      const statusHTML = (CRM_DATA.dropdowns.statuses || []).map(s => `<option value="${s}">${s}</option>`).join("");
-      const paymentStatusHTML = (CRM_DATA.dropdowns.paymentStatuses || []).map(p => `<option value="${p}">${p}</option>`).join("");
-      
-      const descriptions = getAvailableCallDescriptions();
-      const callDescHTML = descriptions.map(d => `<option value="${d}">${d}</option>`).join("");
-      
-      const callCodeHTML = (CRM_DATA.callCodes || []).map(c => `<option value="${c["Call Code"]}" data-points="${c["Points"]}">${c["Call Code"]} - ${c["Description"]}</option>`).join("");
-      const agentHTML = (CRM_DATA.users || []).map(u => `<option value="${u["Name"]}">${u["Name"]} (${u["Role"]})</option>`).join("");
-      
-      let productOptions = (CRM_DATA.products || []).map(p => `<option value="${p}">${p}</option>`).join("");
-      productOptions += `<option value="ADD_NEW" class="text-indigo-400 font-bold">+ Add New Product...</option>`;
-
-      document.getElementById("form-call-reason").innerHTML = callReasonHTML;
-      document.getElementById("form-status").innerHTML = statusHTML;
-      document.getElementById("form-payment-status").innerHTML = paymentStatusHTML;
-      document.getElementById("form-call-description").innerHTML = callDescHTML;
-      document.getElementById("form-call-code").innerHTML = callCodeHTML;
-      document.getElementById("form-agent").innerHTML = agentHTML;
-      document.getElementById("form-product").innerHTML = productOptions;
-
-      const taskAgentSelect = document.getElementById("task-form-agent");
-      if (taskAgentSelect) taskAgentSelect.innerHTML = agentHTML;
-
-      updateCallPoints();
-    }
-
-    function openTicketDrawer(ticketId) {
-      activeTicketId = ticketId;
-      const ticket = CRM_DATA.tickets.find(t => t["Ticket ID"] === ticketId);
-      if (!ticket) return;
-
-      document.getElementById("drawer-ticket-id").innerText = ticket["Ticket ID"];
-      document.getElementById("drawer-ticket-date").innerText = `Opened: ${ticket["Date"] || ""}`;
-      document.getElementById("drawer-company").innerText = ticket["Company"] || "";
-      document.getElementById("drawer-name").innerText = ticket["Name"] || "";
-      document.getElementById("drawer-contact").innerText = ticket["Contact"] || "";
-      document.getElementById("drawer-email").innerText = ticket["Email"] || "N/A";
-      document.getElementById("drawer-designation").innerText = ticket["Designation"] || "N/A";
-      document.getElementById("drawer-code").innerText = ticket["Call Code"] || "";
-      document.getElementById("drawer-points").innerText = ticket["Call Points"] || "0";
-      document.getElementById("drawer-followup-remark").value = "";
-
-      // Populate Drawer Product Dropdown
-      let prodOpts = (CRM_DATA.products || []).map(p => `<option value="${p}" ${ticket["Product / Services"] === p || ticket["Products / Services (multi Checkbox with Option to add products to the list)"] === p ? 'selected' : ''}>${p}</option>`).join("");
-      prodOpts += `<option value="ADD_NEW" class="text-indigo-400 font-bold">+ Add New Product...</option>`;
-      const drawerProductElem = document.getElementById("drawer-product");
-      drawerProductElem.innerHTML = prodOpts;
-      drawerProductElem.onchange = function() { checkNewProduct(this); };
-
-      document.getElementById("drawer-call-reason").innerHTML = (CRM_DATA.dropdowns.callReasons || []).map(r => `<option value="${r}" ${ticket["Call Reason"] === r ? 'selected' : ''}>${r}</option>`).join("");
-      document.getElementById("drawer-status").innerHTML = (CRM_DATA.dropdowns.statuses || []).map(s => `<option value="${s}" ${ticket["Status"] === s ? 'selected' : ''}>${s}</option>`).join("");
-      document.getElementById("drawer-payment-status").innerHTML = (CRM_DATA.dropdowns.paymentStatuses || []).map(p => `<option value="${p}" ${ticket["Payment Status"] === p ? 'selected' : ''}>${p}</option>`).join("");
-      
-      const descriptions = getAvailableCallDescriptions();
-      const currentCallDesc = ticket["Call Description"] || "";
-      document.getElementById("drawer-call-description").innerHTML = descriptions.map(d => `<option value="${d}" ${currentCallDesc === d ? 'selected' : ''}>${d}</option>`).join("");
-
-      document.getElementById("drawer-priority").value = ticket["Priority"] || "Medium";
-      document.getElementById("drawer-agent").innerHTML = (CRM_DATA.users || []).map(u => `<option value="${u["Name"]}" ${ticket["Agent Assigned"] === u["Name"] ? 'selected' : ''}>${u["Name"]} (${u["Role"]})</option>`).join("");
-
-      const timelineContainer = document.getElementById("drawer-timeline");
-      let timelineHTML = `
-        <div class="border-l-2 border-indigo-500 pl-3 space-y-0.5">
-          <p class="text-[11px] text-indigo-400 font-semibold">${ticket["Date"] || "Today"} - Ticket Created</p>
-          <p class="text-[11px] text-slate-300">Opened by ${ticket["Agent Assigned"] || "System"} for ${ticket["Company"] || ""}</p>
-        </div>
-      `;
-      if (ticket["Remarks (with time & date)"]) {
-        timelineHTML += `
-          <div class="border-l-2 border-emerald-500 pl-3 space-y-0.5 pt-2">
-            <p class="text-[11px] text-emerald-400 font-semibold">${ticket["Remarks (with time & date)"]} - Follow-up Remark</p>
-            <p class="text-[11px] text-slate-300">Status: <b>${ticket["Status"]}</b> | Priority: <b>${ticket["Priority"]}</b></p>
-          </div>
-        `;
+        `).join("");
       }
-      timelineContainer.innerHTML = timelineHTML;
-
-      document.getElementById("ticket-drawer").classList.remove("hidden");
     }
 
-    function closeTicketDrawer() {
-      document.getElementById("ticket-drawer").classList.add("hidden");
-      activeTicketId = null;
+    function formatCreatedAt(date) {
+      const day = String(date.getDate()).padStart(2, '0');
+      const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      const month = months[date.getMonth()];
+      const year = date.getFullYear();
+      let hours = date.getHours();
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12;
+      hours = hours ? hours : 12;
+      const strHours = String(hours).padStart(2, '0');
+      return `${day} ${month} ${year}, ${strHours}:${minutes} ${ampm}`;
     }
 
-    async function saveTicketUpdate() {
-      if (!activeTicketId) return;
+    function openNewTicketModal() {
+      const reasonSelect = document.getElementById("ticket-form-reason");
+      const reasons = (CRM_DATA.dropdowns && (CRM_DATA.dropdowns.callReasons || CRM_DATA.dropdowns["Call Reasons"])) || ["AMC PM", "Support Call", "Billing / Renewal", "General Inquiry"];
+      reasonSelect.innerHTML = reasons.map(r => `<option value="${r}">${r}</option>`).join("");
 
-      const ticket = CRM_DATA.tickets.find(t => t["Ticket ID"] === activeTicketId);
-      const newAgent = document.getElementById("drawer-agent").value;
-      const newStatus = document.getElementById("drawer-status").value;
-      const newCallReason = document.getElementById("drawer-call-reason").value;
-      const newPaymentStatus = document.getElementById("drawer-payment-status").value;
-      const newPriority = document.getElementById("drawer-priority").value;
-      const newCallDesc = document.getElementById("drawer-call-description").value;
-      const newProduct = document.getElementById("drawer-product").value;
-      const userRemarkInput = document.getElementById("drawer-followup-remark").value.trim();
+      const descSelect = document.getElementById("ticket-form-desc");
+      const callCodes = CRM_DATA.callCodes || [];
+      descSelect.innerHTML = '<option value="">Select Call Description</option>' + callCodes.map(c => {
+        const desc = c["Description"] || c.description || "";
+        return `<option value="${desc}">${desc}</option>`;
+      }).join("");
 
-      const now = new Date();
-      const day = now.getDate();
-      const suffix = ["th","st","nd","rd"][(day % 10 > 3) ? 0 : (day % 100 - day % 10 != 10) * day % 10];
-      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-      const monthStr = monthNames[now.getMonth()];
-      const hours = String(now.getHours()).padStart(2, '0');
-      const mins = String(now.getMinutes()).padStart(2, '0');
+      document.getElementById("ticket-form-code").value = "";
+      document.getElementById("ticket-form-points").value = "";
+
+      const agentSelect = document.getElementById("ticket-form-agent");
+      const users = CRM_DATA.users || [];
+      agentSelect.innerHTML = users.map(u => {
+        const uName = u["Name"] || u.name || "";
+        return `<option value="${uName}">${uName}</option>`;
+      }).join("");
+      if (currentUser && currentUser.name) {
+        agentSelect.value = currentUser.name;
+      }
+
+      const statusSelect = document.getElementById("ticket-form-status");
+      const statuses = (CRM_DATA.dropdowns && (CRM_DATA.dropdowns.statuses || CRM_DATA.dropdowns["Status"])) || ["Open", "Work In progress", "Closed"];
+      statusSelect.innerHTML = statuses.map(s => `<option value="${s}">${s}</option>`).join("");
+
+      const paymentSelect = document.getElementById("ticket-form-payment");
+      const payStatuses = (CRM_DATA.dropdowns && (CRM_DATA.dropdowns.paymentStatuses || CRM_DATA.dropdowns["Payment Status"])) || ["Pending", "Done", "Not Applicable"];
+      paymentSelect.innerHTML = payStatuses.map(p => `<option value="${p}">${p}</option>`).join("");
+      paymentSelect.value = "Not Applicable";
+
+      document.getElementById("ticket-form-priority").value = "Low";
+
+      document.getElementById("ticket-form-company").value = "";
+      document.getElementById("ticket-form-name").value = "";
+      document.getElementById("ticket-form-designation").value = "";
+      document.getElementById("ticket-form-email").value = "";
+      document.getElementById("ticket-form-contact").value = "";
+      document.getElementById("ticket-form-calltime").value = "";
+
+      document.getElementById("create-ticket-modal").classList.remove("hidden");
+    }
+
+    function onCallDescriptionChange() {
+      const selectedDesc = document.getElementById("ticket-form-desc").value;
+      const callCodes = CRM_DATA.callCodes || [];
+      const match = callCodes.find(c => (c["Description"] || c.description) === selectedDesc);
+      if (match) {
+        document.getElementById("ticket-form-code").value = match["Call Code"] || match.code || "";
+        document.getElementById("ticket-form-points").value = match["Points"] || match.points || "";
+      } else {
+        document.getElementById("ticket-form-code").value = "";
+        document.getElementById("ticket-form-points").value = "";
+      }
+    }
+
+    function closeCreateTicketModal() {
+      document.getElementById("create-ticket-modal").classList.add("hidden");
+    }
+
+    function submitNewTicket(event) {
+      event.preventDefault();
+      const randomId = "TICK-" + Math.floor(1000 + Math.random() * 9000);
+      const createdAtFormatted = formatCreatedAt(new Date());
       
-      const formattedTimestamp = userRemarkInput 
-        ? `${day}${suffix} ${monthStr} - ${hours}:${mins} - ${currentUser.name} - ${userRemarkInput}` 
-        : `${day}${suffix} ${monthStr} - ${hours}:${mins} - ${currentUser.name} - Status updated to ${newStatus}`;
-
-      const updateFields = {
-        "Status": newStatus,
-        "Call Reason": newCallReason,
-        "Payment Status": newPaymentStatus,
-        "Priority": newPriority,
-        "Call Description": newCallDesc,
-        "Product / Services": newProduct,
-        "Remarks (with time & date)": formattedTimestamp
+      const newTicket = {
+        "Ticket ID": randomId,
+        "SPOC Company": document.getElementById("ticket-form-company").value,
+        "SPOC Name": document.getElementById("ticket-form-name").value,
+        "SPOC Designation": document.getElementById("ticket-form-designation").value,
+        "SPOC Email": document.getElementById("ticket-form-email").value,
+        "SPOC Contact": document.getElementById("ticket-form-contact").value,
+        "Created At": createdAtFormatted,
+        "Call Reason": document.getElementById("ticket-form-reason").value,
+        "Call Description": document.getElementById("ticket-form-desc").value,
+        "Call Code": document.getElementById("ticket-form-code").value,
+        "Call Points": document.getElementById("ticket-form-points").value,
+        "Agent Assigned": document.getElementById("ticket-form-agent").value,
+        "Call Time": document.getElementById("ticket-form-calltime").value,
+        "Status": document.getElementById("ticket-form-status").value,
+        "Payment Status": document.getElementById("ticket-form-payment").value,
+        "Priority": document.getElementById("ticket-form-priority").value
       };
 
-      ticket["Status"] = newStatus;
-      ticket["Call Reason"] = newCallReason;
-      ticket["Payment Status"] = newPaymentStatus;
-      ticket["Priority"] = newPriority;
-      ticket["Call Description"] = newCallDesc;
-      ticket["Product / Services"] = newProduct;
-      ticket["Remarks (with time & date)"] = formattedTimestamp;
-      renderDashboard();
+      CRM_DATA.tickets.unshift(newTicket);
+      renderAll();
+      closeCreateTicketModal();
 
-      fetch(WEB_APP_URL, {
-        method: "POST",
-        body: JSON.stringify({ sheetName: "Tickets_Master", action: "update", ticketId: activeTicketId, fields: updateFields })
-      });
-
-      if (ticket["Agent Assigned"] !== newAgent) {
-        const baseId = activeTicketId.split('-')[0] + '-' + activeTicketId.split('-')[1];
-        const existingCount = CRM_DATA.tickets.filter(t => t["Ticket ID"].startsWith(baseId)).length;
-        const suffixLetter = String.fromCharCode(64 + existingCount); 
-        const targetTicketId = `${baseId}-${suffixLetter}`;
-
-        await fetch(WEB_APP_URL, {
-          method: "POST",
-          body: JSON.stringify({ sheetName: "Tickets_Master", action: "update", ticketId: activeTicketId, fields: { "Status": "Closed", "Remarks (with time & date)": formattedTimestamp } })
-        });
-
-        const newTicketRow = [
-          ticket["Date"],
-          targetTicketId,
-          ticket["Name"],
-          ticket["Company"],
-          ticket["Designation"],
-          ticket["Contact"],
-          ticket["Email"],
-          newCallReason,
-          newCallDesc,
-          ticket["Call Code"],
-          ticket["Call Points"],
-          newAgent,
-          newStatus,
-          newPaymentStatus,
-          formattedTimestamp,
-          newProduct,
-          newPriority
-        ];
-
-        await fetch(WEB_APP_URL, {
-          method: "POST",
-          body: JSON.stringify({ sheetName: "Tickets_Master", action: "append", row: newTicketRow })
-        });
-
-        alert(`Ticket successfully transferred to ${newAgent} as ${targetTicketId}!`);
-      } else {
-        alert("Follow-up remark and ticket updates saved successfully!");
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        google.script.run.appendTicketData(newTicket);
       }
 
-      closeTicketDrawer();
-      loadCRMData();
+      alert(`Ticket ${randomId} successfully raised!`);
     }
 
     function openAssignTaskModal() {
+      const selectElem = document.getElementById("task-form-agent");
+      selectElem.innerHTML = (CRM_DATA.users || []).map(u => `<option value="${u["Name"] || u.name}">${u["Name"] || u.name} (${u["Role"] || u.role})</option>`).join("");
       document.getElementById("task-form-duedate").value = new Date().toISOString().split('T')[0];
       document.getElementById("assign-task-modal").classList.remove("hidden");
     }
@@ -994,200 +1055,29 @@
         title: document.getElementById("task-form-title").value,
         description: document.getElementById("task-form-desc").value,
         priority: document.getElementById("task-form-priority").value,
-        dueDate: document.getElementById("task-form-duedate").value
+        dueDate: document.getElementById("task-form-duedate").value,
+        completed: false
       };
 
       CRM_DATA.adminTasks.push(newTask);
-      renderDashboard();
+      renderAll();
       closeAssignTaskModal();
       alert(`Task successfully assigned to ${newTask.assignedTo}!`);
     }
 
-    function checkNewProduct(selectElem) {
-      if (selectElem.value === "ADD_NEW") {
-        const newProd = prompt("Enter new Product / Service name:");
-        if (newProd && newProd.trim() !== "") {
-          CRM_DATA.products.push(newProd.trim());
-          fetch(WEB_APP_URL, {
-            method: "POST",
-            body: JSON.stringify({ sheetName: "Master_Products", action: "append", row: [newProd.trim()] })
-          });
-          populateGlobalDropdowns();
-          selectElem.value = newProd.trim();
-        } else {
-          selectElem.selectedIndex = 0;
-        }
-      }
-    }
-
-    function updateCallPoints() {
-      const codeSelect = document.getElementById("form-call-code");
-      const selectedOption = codeSelect.options[codeSelect.selectedIndex];
-      const points = selectedOption ? selectedOption.getAttribute("data-points") : 0;
-      document.getElementById("form-call-points").value = points;
-    }
-
-    function switchTab(tabId) {
-      ['overview', 'tickets', 'mytasks', 'workflow', 'callcodes', 'clients', 'users'].forEach(t => {
-        const elem = document.getElementById(`tab-${t}`);
-        if (elem) elem.classList.add('hidden');
-        const navElem = document.getElementById(`nav-${t}`);
-        if (navElem) {
-          navElem.classList.remove('bg-indigo-600', 'text-white');
-          navElem.classList.add('text-slate-400');
-        }
-      });
-      
-      const targetTab = document.getElementById(`tab-${tabId}`);
-      if (targetTab) targetTab.classList.remove('hidden');
-      
-      const targetNav = document.getElementById(`nav-${tabId}`);
-      if (targetNav) {
-        targetNav.classList.add('bg-indigo-600', 'text-white');
-        targetNav.classList.remove('text-slate-400');
-      }
-      
-      const titles = { 
-        overview: 'Dashboard Overview', 
-        tickets: 'Support Tickets', 
-        mytasks: 'My Assigned Tasks & Tickets',
-        workflow: 'Workflow & Agent Monitoring',
-        callcodes: 'Master Call Codes & Points', 
-        clients: 'Clients Directory', 
-        users: 'Users Directory' 
-      };
-      document.getElementById('page-title').innerText = titles[tabId] || 'Dashboard';
-    }
-
-    function openNewTicketModal() {
-      document.getElementById("form-date").value = new Date().toISOString().split('T')[0];
-      document.getElementById("ticket-modal").classList.remove("hidden");
-    }
-
-    function closeNewTicketModal() {
-      document.getElementById("ticket-modal").classList.add("hidden");
-    }
-
-    function logout() {
-      if (confirm("Are you sure you want to log out?")) {
-        document.getElementById("login-screen").classList.remove("hidden");
-        toggleAuthMode('signin');
-      }
-    }
-
-    function toggleAuthMode(mode) {
-      if (mode === 'register') {
-        document.getElementById("signin-form").classList.add("hidden");
-        document.getElementById("register-form").classList.remove("hidden");
-        document.getElementById("auth-title").innerText = "New User Registration";
-        document.getElementById("auth-subtitle").innerText = "Register your account for SNOR-CRM";
-      } else {
-        document.getElementById("register-form").classList.add("hidden");
-        document.getElementById("signin-form").classList.remove("hidden");
-        document.getElementById("auth-title").innerText = "SNOR-CRM Sign In";
-        document.getElementById("auth-subtitle").innerText = "Please sign in to access your dashboard";
-      }
-    }
-
-    async function handleLogin(event) {
+    function handleLogin(event) {
       event.preventDefault();
-      const email = document.getElementById("login-email").value.trim().toLowerCase();
-      const matchedUser = CRM_DATA.users.find(u => (u["Email"] || "").trim().toLowerCase() === email);
-      
-      if (!matchedUser) {
-        alert("Account not found. Please register first.");
-        return;
-      }
-
-      const userStatus = (matchedUser["Status"] || "").trim().toLowerCase();
-      if (userStatus !== "approved") {
-        alert("Your account is currently pending approval by a Super Admin.");
-        return;
-      }
-
-      currentUser = { name: matchedUser["Name"], role: matchedUser["Role"] };
-      document.getElementById("current-user-name").innerText = currentUser.name;
-      document.getElementById("current-user-role").innerText = currentUser.role;
-
-      const workflowNav = document.getElementById("workflow-nav-container");
-      if (currentUser.role === "Super Admin") {
-        workflowNav.classList.remove("hidden");
-      } else {
-        workflowNav.classList.add("hidden");
-      }
-      
       document.getElementById("login-screen").classList.add("hidden");
-      document.getElementById("login-password").value = "";
-      renderDashboard();
+      loadAppData();
     }
 
-    async function handleRegister(event) {
-      event.preventDefault();
-      const name = document.getElementById("reg-name").value;
-      const email = document.getElementById("reg-email").value;
-      const phone = document.getElementById("reg-phone").value;
-      const password = document.getElementById("reg-password").value;
-
-      const newUserRow = [name, email, phone, "Agent", "Pending", password];
-
-      await fetch(WEB_APP_URL, {
-        method: "POST",
-        body: JSON.stringify({ sheetName: "Users_Directory", action: "append", row: newUserRow })
-      });
-
-      alert("Registration submitted successfully! Please sign in once approved.");
-      toggleAuthMode('signin');
-      loadCRMData();
+    function handleLogout() {
+      document.getElementById("login-screen").classList.remove("hidden");
     }
 
-    function filterCallCodes() {
-      const query = document.getElementById("code-search").value.toLowerCase();
-      const rows = document.querySelectorAll("#call-codes-table-body tr");
-      rows.forEach(row => {
-        const text = row.innerText.toLowerCase();
-        row.style.display = text.includes(query) ? "" : "none";
-      });
-    }
-
-    async function submitTicket(event) {
-      event.preventDefault();
-      const now = new Date();
-      const day = now.getDate();
-      const suffix = ["th","st","nd","rd"][(day % 10 > 3) ? 0 : (day % 100 - day % 10 != 10) * day % 10];
-      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-      const initialTimestamp = `${day}${suffix} ${monthNames[now.getMonth()]} - ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')} - ${currentUser.name} - Ticket Created`;
-
-      const newRow = [
-        document.getElementById("form-date").value,
-        document.getElementById("form-ticket-id").value,
-        document.getElementById("form-name").value,
-        document.getElementById("form-company").value,
-        document.getElementById("form-designation").value,
-        document.getElementById("form-contact").value,
-        document.getElementById("form-email").value,
-        document.getElementById("form-call-reason").value,
-        document.getElementById("form-call-description").value,
-        document.getElementById("form-call-code").value,
-        document.getElementById("form-call-points").value,
-        document.getElementById("form-agent").value,
-        document.getElementById("form-status").value,
-        document.getElementById("form-payment-status").value,
-        initialTimestamp,
-        document.getElementById("form-product").value,
-        document.getElementById("form-priority").value
-      ];
-
-      await fetch(WEB_APP_URL, {
-        method: "POST",
-        body: JSON.stringify({ sheetName: "Tickets_Master", action: "append", row: newRow })
-      });
-
-      loadCRMData();
-      closeNewTicketModal();
-      alert("Ticket successfully logged and synced!");
-    }
-
-    loadCRMData();
+    window.onload = function() {
+      loadAppData();
+    };
   </script>
 </body>
 </html>
